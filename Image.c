@@ -298,7 +298,6 @@ void I_bresenhamOrigin (Image * img , int x , int y)
 
 void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 {	
-	printf ("Image : A (%d , %d) ; B (%d , %d)\n" , xA , yA , xB , xA) ;
 	int deltaX = xB - xA ;
 	int deltaY = yB - yA ;
 	int incrd1 = 2 * deltaY ;
@@ -312,7 +311,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 		{
 			if (deltaX >= deltaY) // Premier octant.
 			{
-				printf ("Premier octant.\n") ;
+				// printf ("Premier octant.\n") ;
 				while (i < xB)
 				{
 					I_plot (img , i , j) ; // Afficher.
@@ -331,7 +330,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 			}
 			else if (deltaX < deltaY) // Deuxieme octant.
 			{
-				printf ("Deuxieme octant.\n") ;
+				// printf ("Deuxieme octant.\n") ;
 				incrd1 = 2 * deltaX ;
 				incrd2 = 2 * (deltaX - deltaY) ;
 				critere = (2 * deltaX) - deltaY ;
@@ -356,7 +355,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 		{
 			if (deltaX < -deltaY) // Septieme octant.
 			{
-				printf ("Septieme octant.\n") ;
+				// printf ("Septieme octant.\n") ;
 				critere = deltaY ;
 				incrd2 = 2 * deltaX ;
 				while (j > yB)
@@ -373,7 +372,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 			}
 			else if (deltaX >= -deltaY) // Huitieme octant.
 			{
-				printf ("Huitieme octant.\n") ;
+				// printf ("Huitieme octant.\n") ;
 				critere = deltaX ;
 				incrd2 = 2 * deltaX ;
 				while (i < xB)
@@ -396,7 +395,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 		{
 			if (-deltaX < deltaY) // Troisieme octant.
 			{
-				printf ("Troisieme octant.\n") ;	
+				// printf ("Troisieme octant.\n") ;	
 				critere = deltaY ;
 				incrd2 = 2 * deltaX ;
 				while (j < yB)
@@ -413,7 +412,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 			}
 			else if (-deltaX >= deltaY) // Quatrieme octant.
 			{
-				printf ("Quatrieme octant.\n") ;
+				// printf ("Quatrieme octant.\n") ;
 				critere = deltaX ;
 				incrd2 = 2 * deltaX ;
 				while (i > xB)
@@ -433,7 +432,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 		{
 			if (deltaX <= deltaY) // Cinquime octant.
 			{
-				printf ("Cinquime octant.\n") ;
+				// printf ("Cinquime octant.\n") ;
 				critere = deltaX ;
 				incrd2 = 2 * deltaX ;
 				while (i > xB)
@@ -450,7 +449,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 			}
 			else if (deltaX > deltaY) // Sixieme octant.
 			{
-				printf ("Sixieme octant.\n") ;
+				// printf ("Sixieme octant.\n") ;
 				critere = deltaY ;
 				incrd2 = 2 * deltaX ;
 				while (j > yB)
@@ -469,7 +468,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 	}
 	else if (deltaY == 0) // A l'horizontale.
 	{
-		if (deltaX >= 0) // Vers la droite. =
+		if (deltaX >= 0) // Vers la droite.
 		{
 			while (i < xB)
 			{
@@ -488,7 +487,7 @@ void I_bresenham (Image * img , int xA , int yA , int xB , int yB)
 	}
 	else if (deltaX == 0) // A la verticale.
 	{
-		if (deltaY >= 0) // Vers le haut. =
+		if (deltaY >= 0) // Vers le haut.
 		{
 			while (j < yB)
 			{

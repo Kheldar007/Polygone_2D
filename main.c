@@ -16,9 +16,10 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 
-#include "Image.h"
+# include "Polygon.h"
 
 Image *img;
+Polygon * p = NULL ; // Pour l'instant le polygone est vide.
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -27,18 +28,12 @@ Image *img;
 //	de cette fonction.
 //------------------------------------------------------------------
 
-int xA = 0 ;
-int yA = 0 ;
-int xB = 0 ;
-int yB = 0 ;
-
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
 	I_draw(img);
-	I_bresenham (img , xA , yA , xB , yB) ; // Tracer une droite de Bresenham.
-	printf ("Main : A (%d , %d) ; B (%d , %d)\n" , xA , yA , xB , xA) ;
+	P_draw (img , p) ; // Tracer le polygone.
 
     glutSwapBuffers();
 }
@@ -53,11 +48,15 @@ void mouse_CB(int button, int state, int x, int y)
 {
 	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN))
 	{
-		xA = xB ;
-		yA = yB ;
-		xB = x ;
-		yB = img -> _height - y ;
-		printf ("Main clic : A (%d , %d) ; B (%d , %d)\n" , xA , yA , x , y) ;
+		Point point = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.		
+		if (p == NULL) // Si le polygone est vide.
+		{
+			p = P_newPolygon (point) ; // Creer un nouveau polygone.
+		}
+		else
+		{
+			P_addPoint (p , point) ; // Ajouter le point au polygone.
+		}
 		I_focusPoint(img,x,img->_height-y);
 	}
 
