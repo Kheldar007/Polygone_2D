@@ -41,6 +41,17 @@ void P_addPoint (Polygon * pol , Point poi)
 	p_t -> next = newPolygon ; // Ajouter le point au polygone.
 }
 
+void P_close (Image * i , Polygon * p)
+{
+	Polygon * p_t = p ; // Polygone temporaire.
+	while (p_t -> next != NULL) // Tant qu'il reste des points dans le polygone.
+	{
+		p_t = p_t -> next ; // Regarder le point suivant.
+	}
+	// Maintenant le dernier point est atteint.
+	I_bresenham (i , p_t -> p.x , p_t -> p.y , p -> p.x , p -> p.y) ; // Tracer une droite de Bresenham entre le dernier et le premier point.
+}
+
 void P_draw (Image * i , Polygon * pp)
 {
 	if (pp != NULL) // Si le polygone contient quelque chose.

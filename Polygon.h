@@ -55,6 +55,12 @@ Polygon * P_newPolygon (Point p) ;
  */
 void P_addPoint (Polygon * pol , Point poi) ;
 /**
+ * @brief Afficher la ligne fermant le polygone.
+ * @param i L'image sur laquelle tracer le polygone.
+ * @param p Le polygone.
+ */
+void P_close (Image * i , Polygon * p) ;
+/**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.
  * @param p Le polygone.
