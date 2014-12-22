@@ -59,7 +59,6 @@ void mouse_CB(int button, int state, int x, int y)
 		}
 		I_focusPoint(img,x,img->_height-y);
 	}
-
 	glutPostRedisplay();
 }
 
