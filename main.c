@@ -36,7 +36,7 @@ int closed = FALSE ; // Le polygone est ouvert.
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-
+    	
 	I_draw(img);
 	P_draw (img , p) ; // Tracer le polygone.
 
@@ -83,15 +83,15 @@ void keyboard_CB(unsigned char key, int x, int y)
 	case 'i' : I_zoomInit(img); break;
 	case 'c' :
 	{
-		if (closed == TRUE) // Si le polygone est ferme.
+		if (closed == TRUE) // Si le polygone etait ferme, on l'ouvre.
 		{
 			closed = FALSE ; // Le polygone est maintenant ouvert.
-			// P_open (img , p) ;
+			P_open (img , p) ; // Ouvrir le polygone.
 		}
-		else // Si le polygone est ouvert.
+		else // Si le polygone etait ouvert, on le ferme.
 		{
-			P_close (img , p) ; // Fermer le polygone.
 			closed = TRUE ;
+			P_close (img , p) ; // Fermer le polygone.
 		}
 		break ;
 	}
