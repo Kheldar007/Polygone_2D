@@ -20,6 +20,14 @@ typedef struct
 	int z ; // Z.
 } Point ; // Les coordonnes d'un point.
 
+typedef struct edge
+{
+	Point pMin ; // Exremite de l'arete donc l'ordonnee est inferieure ou egale a celle de l'autre extremite.
+	Point pMax ; // Autre extremite.
+	int xIntersection ; // Absisse de l'intersection avec le scan-line courant.
+	int counter ; // Compteur permettant d'incrmenter l'absisse du point d'intersection.
+} Edge ;
+
 typedef struct polygon
 {
 	Point p ; // Un point.

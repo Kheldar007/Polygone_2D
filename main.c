@@ -77,25 +77,28 @@ void keyboard_CB(unsigned char key, int x, int y)
 	// fprintf(stderr,"key=%d\n",key);
 	switch(key)
 	{
-	case 27 : exit(1); break;
-	case 'z' : I_zoom(img,2.0); break;
-	case 'Z' : I_zoom(img,0.5); break;
-	case 'i' : I_zoomInit(img); break;
-	case 'c' :
-	{
-		if (closed == TRUE) // Si le polygone etait ferme, on l'ouvre.
+		case 27 : exit(1); break;
+		case 'c' : // Ouvrir ou fermer le polygone.
 		{
-			closed = FALSE ; // Le polygone est maintenant ouvert.
-			P_open (img , p) ; // Ouvrir le polygone.
+			if (closed == TRUE) // Si le polygone etait ferme, on l'ouvre.
+			{
+				closed = FALSE ; // Le polygone est maintenant ouvert.
+				P_open (img , p) ; // Ouvrir le polygone.
+			}
+			else // Si le polygone etait ouvert, on le ferme.
+			{
+				closed = TRUE ;
+				P_close (img , p) ; // Fermer le polygone.
+			}
+			break ;
 		}
-		else // Si le polygone etait ouvert, on le ferme.
+		case 'f' : // Remplir ou vider le polygone.
 		{
-			closed = TRUE ;
-			P_close (img , p) ; // Fermer le polygone.
 		}
-		break ;
-	}
-	default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
+		case 'i' : I_zoomInit(img); break;
+		case 'z' : I_zoom(img,2.0); break;
+		case 'Z' : I_zoom(img,0.5); break;
+		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
 }
