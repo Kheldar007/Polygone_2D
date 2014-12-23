@@ -18,13 +18,20 @@
 
 # include "Polygon.h"
 
+/********************************* Bouleens. **********************************/
 # define FALSE 0
-# define TRUE 1
+# define TRUE  1
+/*********************************** Mode. ************************************/
+# define APPEND 2
+# define VERTEX 3
+# define EDGE   4
+/******************************************************************************/
 
 Image *img;
 Polygon * p = NULL ; // Pour l'instant le polygone est vide.
 
 int closed = FALSE ; // Le polygone est ouvert.
+int mode = APPEND ; // Par defaut, mode "append".
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -78,6 +85,9 @@ void keyboard_CB(unsigned char key, int x, int y)
 	switch(key)
 	{
 		case 27 : exit(1); break;
+		case 'a' : // Mode "append". Chaque clic ajoute un point au polygone.
+		{
+		}
 		case 'c' : // Ouvrir ou fermer le polygone.
 		{
 			if (closed == TRUE) // Si le polygone etait ferme, on l'ouvre.
