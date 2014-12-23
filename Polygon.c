@@ -33,8 +33,9 @@ Polygon * P_newPolygon (Point pp)
 void P_addPoint (Polygon * pol , Point poi)
 {
 	Polygon * p_t = pol ; // Polygone temporaire.
-	while (p_t -> next != NULL) // Tant qu'il reste des points dans le polygone.
+	while ((p_t -> next != NULL) || (p_t -> next != pol)) // Tant qu'il reste des points dans le polygone.
 	{
+		printf ("lsdkflsfj\n") ;
 		p_t = p_t -> next ; // Regarder le point suivant.
 	}
 	Polygon * newPolygon = P_newPolygon (poi) ; // Creer une structure et mettre le point dedans.
@@ -48,8 +49,17 @@ void P_close (Image * i , Polygon * p)
 	{
 		p_t = p_t -> next ; // Regarder le point suivant.
 	}
-	// Maintenant le dernier point est atteint.
-	I_bresenham (i , p_t -> p.x , p_t -> p.y , p -> p.x , p -> p.y) ; // Tracer une droite de Bresenham entre le dernier et le premier point.
+	p_t -> next = p ; // Le dernier point est le premier.
+}
+
+void P_open (Image * i , Polygon * p)
+{
+	Polygon * p_t = p ; // Polygone temporaire.
+	while (p_t -> next != p) // Tant qu'il reste des points dans le polygone.
+	{
+		p_t = p_t -> next ; // Regarder le point suivant.
+	}
+	p_t -> next = NULL ; // Le dernier point est le premier.
 }
 
 void P_draw (Image * i , Polygon * pp)
@@ -57,7 +67,7 @@ void P_draw (Image * i , Polygon * pp)
 	if (pp != NULL) // Si le polygone contient quelque chose.
 	{
 		Polygon * p_t = pp ; // Polygone temporaire.
-		while (p_t -> next != NULL) // Tant qu'il reste des points dans le polygone.
+		while ((p_t -> next != NULL) || (p_t -> next != pp)) // Tant qu'il reste des points dans le polygone.
 		{
 			I_bresenham (i , p_t -> p.x , p_t -> p.y ,
 							 p_t -> next -> p.x , p_t -> next -> p.y) ; // Tracer une droite de Bresenham entre le point courant et le suivant.

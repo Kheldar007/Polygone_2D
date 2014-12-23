@@ -18,8 +18,13 @@
 
 # include "Polygon.h"
 
+# define FALSE 0
+# define TRUE 1
+
 Image *img;
 Polygon * p = NULL ; // Pour l'instant le polygone est vide.
+
+int closed = FALSE ; // Le polygone est ouvert.
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -76,6 +81,20 @@ void keyboard_CB(unsigned char key, int x, int y)
 	case 'z' : I_zoom(img,2.0); break;
 	case 'Z' : I_zoom(img,0.5); break;
 	case 'i' : I_zoomInit(img); break;
+	case 'c' :
+	{
+		if (closed == TRUE) // Si le polygone est ferme.
+		{
+			closed = FALSE ; // Le polygone est maintenant ouvert.
+			// P_open (img , p) ;
+		}
+		else // Si le polygone est ouvert.
+		{
+			P_close (img , p) ; // Fermer le polygone.
+			closed = TRUE ;
+		}
+		break ;
+	}
 	default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
