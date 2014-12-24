@@ -87,6 +87,7 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 27 : exit(1); break;
 		case 'a' : // Mode "append". Chaque clic ajoute un point au polygone.
 		{
+			mode = APPEND ; // Affecter la valeur du mode.
 		}
 		case 'c' : // Ouvrir ou fermer le polygone.
 		{
