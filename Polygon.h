@@ -12,6 +12,8 @@
 # include <stdlib.h>
 # include "Image.h"
 
+# define SQUARE 13 // Pour la taille du carre de selection.
+
 
 typedef struct
 {
@@ -79,6 +81,13 @@ void P_open (Image * i , Polygon * p) ;
  * @param p Un point.
  */
 void P_vertexSelected (Point * p) ;
+/**
+ * @brief  Distance entre deux points.
+ * @param  point1 Le premier point.
+ * @param  point2 Le second point.
+ * @result Distance cartesienne entre les points.
+ */
+float distanceBetweenVertices (Point * point1 , Point * point2) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

@@ -65,11 +65,55 @@ void P_vertexSelected (Point * p)
 	glColor3d (1 , 1 , 1) ; // Couleur du carre.
 	
 	glBegin (GL_LINE_LOOP) ; // Tracer des lignes.
-		glVertex3d (p -> x - 10 , p -> y - 10 , 0) ;
-		glVertex3d (p -> x + 10 , p -> y - 10 , 0) ;
-		glVertex3d (p -> x + 10 , p -> y + 10 , 0) ;
-		glVertex3d (p -> x - 10 , p -> y + 10 , 0) ;
+		glVertex3d (p -> x - SQUARE , p -> y - SQUARE , 0) ;
+		glVertex3d (p -> x + SQUARE , p -> y - SQUARE , 0) ;
+		glVertex3d (p -> x + SQUARE , p -> y + SQUARE , 0) ;
+		glVertex3d (p -> x - SQUARE , p -> y + SQUARE , 0) ;
 	glEnd () ;
+}
+
+float distanceBetweenVertices (Point * point1 , Point * point2)
+{
+	float xBMinusXA = point2 -> x - point1 -> x ; // xB - xA
+	float yBMinusYA = point2 -> y - point1 -> y ; // yB - yA
+	
+	xBMinusXA *= xBMinusXA ; // Au carre.
+	yBMinusYA *= yBMinusYA ; // Au carre.
+	
+	float sum = xBMinusXA + yBMinusYA ; // Faire la somme.
+	
+	return sqrt (sum) ; // Racine carree de l'ensemble.
+}
+
+Point * closestVertex (Polygon * pol , Point * poi)
+{
+	float distance = -1 ; // Valeur de depart.
+	Polygon * pol0 = pol ; // Pour parcourir le polygone.
+
+	// Point *closest = (Point*)malloc(sizeof(Point));
+	// Polygon *tmp = polygon;
+	// Polygon *first = polygon;
+	// int min;
+// 
+	// closest->x = tmp->pt->x;
+	// closest->y = tmp->pt->y;
+// 
+	// min = sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2)); // distance entre 2 points
+// 
+	// tmp = tmp->next;
+// 
+	// while(tmp->pt->x != first->pt->x || tmp->pt->y != first->pt->y)
+	// {
+		// if(sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2)) < min)
+		// {
+			// min = sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2));
+			// closest->x = tmp->pt->x;
+			// closest->y = tmp->pt->y;
+		// }
+		// tmp = tmp->next;
+	// }
+	// 
+	// return closest;
 }
 
 void P_draw (Image * i , Polygon * pp)
