@@ -76,6 +76,7 @@ void P_close (Image * i , Polygon * p) ;
 void P_open (Image * i , Polygon * p) ;
 /**
  * @brief Dessiner un petit carre autour du vertex selectionne.
+ * @param p Un point.
  */
 void P_vertexSelected (Point * p) ;
 /**
