@@ -29,6 +29,7 @@
 
 Image *img;
 Polygon * p = NULL ; // Pour l'instant le polygone est vide.
+Point * pointSelected ;
 
 int closed = FALSE ; // Le polygone est ouvert.
 int mode = APPEND ; // Par defaut, mode "append".
@@ -46,6 +47,10 @@ void display_CB()
     	
 	I_draw(img);
 	P_draw (img , p) ; // Tracer le polygone.
+	if (mode == VERTEX)
+	{
+		P_vertexSelected (pointSelected) ; // Tracer un marqueur autour du point selectionne.
+	}
 
     glutSwapBuffers();
 }
@@ -58,18 +63,23 @@ void display_CB()
 
 void mouse_CB(int button, int state, int x, int y)
 {
-	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN))
-	{
-		Point point = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.		
+	pointSelected = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.	
+	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode != VERTEX) &&
+														   (mode != EDGE)) // En mode "append".
+	{	
 		if (p == NULL) // Si le polygone est vide.
 		{
-			p = P_newPolygon (point) ; // Creer un nouveau polygone.
+			p = P_newPolygon (pointSelected) ; // Creer un nouveau polygone.
 		}
 		else
 		{
-			P_addPoint (p , point) ; // Ajouter le point au polygone.
+			P_addPoint (p , pointSelected) ; // Ajouter le point au polygone.
 		}
 		I_focusPoint(img,x,img->_height-y);
+	}
+	else if ((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode == VERTEX)) // En mode "vertex".
+	{
+		// P_vertexSelected (pointSelected) ; // Tracer un marqueur autour du point selectionne.
 	}
 	glutPostRedisplay();
 }
@@ -88,6 +98,7 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'a' : // Mode "append". Chaque clic ajoute un point au polygone.
 		{
 			mode = APPEND ; // Affecter la valeur du mode.
+			break ;
 		}
 		case 'c' : // Ouvrir ou fermer le polygone.
 		{
@@ -103,10 +114,20 @@ void keyboard_CB(unsigned char key, int x, int y)
 			}
 			break ;
 		}
+		case 'e' : // Mode "edge". Une seule arete est selectionnee.
+		{
+			mode = EDGE ; // Affecter la valeur du mode.
+			break ;
+		}
 		case 'f' : // Remplir ou vider le polygone.
 		{
 		}
 		case 'i' : I_zoomInit(img); break;
+		case 'v' : // Mode "vertex". Un seul sommet est selectionne.
+		{
+			mode = VERTEX ; // Affecter la valeur du mode.
+			break ;
+		}
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);

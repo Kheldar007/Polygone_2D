@@ -42,12 +42,12 @@ typedef struct polygon
  * @param  zz La coordonnee z.
  * @return Un point.
  */
-Point P_newPoint (int xx , int yy , int zz) ;
+Point * P_newPoint (int xx , int yy , int zz) ;
 /**
  * @brief Afficher les coordonnes d'un point.
  * @param p Le point.
  */
-void P_printPoint (Point p) ;
+void P_printPoint (Point * p) ;
 
 
 /**
@@ -55,13 +55,13 @@ void P_printPoint (Point p) ;
  * @param  p Le premier point.
  * @return Un polygone.
  */
-Polygon * P_newPolygon (Point p) ;
+Polygon * P_newPolygon (Point * p) ;
 /**
  * @brief Ajouter un point au polygone.
  * @param pol Le polygone.
  * @param poi Le point.
  */
-void P_addPoint (Polygon * pol , Point poi) ;
+void P_addPoint (Polygon * pol , Point * poi) ;
 /**
  * @brief Afficher la ligne fermant le polygone.
  * @param i L'image sur laquelle tracer le polygone.
@@ -74,6 +74,10 @@ void P_close (Image * i , Polygon * p) ;
  * @param p Le polygone.
  */
 void P_open (Image * i , Polygon * p) ;
+/**
+ * @brief Dessiner un petit carre autour du vertex selectionne.
+ */
+void P_vertexSelected (Point * p) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

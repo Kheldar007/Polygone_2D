@@ -8,29 +8,29 @@
 # include "Polygon.h"
 
 
-Point P_newPoint (int xx , int yy , int zz)
+Point * P_newPoint (int xx , int yy , int zz)
 {
-	Point result ; // Point a renvoyer.
-	result.x = xx ; // Lui mettre son abscisse.
-	result.y = yy ; // Lui mettre son ordonnee.
-	result.z = zz ; // Lui mettre sa coordonne z.
+	Point * result = (Point *) malloc (sizeof (Point)) ; // Point a renvoyer.
+	result -> x = xx ; // Lui mettre son abscisse.
+	result -> y = yy ; // Lui mettre son ordonnee.
+	result -> z = zz ; // Lui mettre sa coordonne z.
 	return result ; // Renvoyer le point.
 }
 
-void P_printPoint (Point p)
+void P_printPoint (Point * p)
 {
-	printf ("(%d , %d , %d)\n" , p.x , p.y , p.z) ; // Afficher les coordonnes du point.
+	printf ("(%d , %d , %d)\n" , p -> x , p -> y , p -> z) ; // Afficher les coordonnes du point.
 }
 
-Polygon * P_newPolygon (Point pp)
+Polygon * P_newPolygon (Point * pp)
 {
 	Polygon * result = (Polygon *) malloc (sizeof (Polygon)) ; // Allouer l'espace memoire.
-	result -> p = pp ; // Mettre le point dans le polygone.
+	result -> p = * pp ; // Mettre le point dans le polygone.
 	result -> next = NULL ; // Pas d'autre point pour le moment.
 	return result ; // Renvoyer le polynome.
 }
 
-void P_addPoint (Polygon * pol , Point poi)
+void P_addPoint (Polygon * pol , Point * poi)
 {
 	Polygon * p_t = pol ; // Polygone temporaire.
 	while (p_t -> next != NULL) // Tant qu'il reste des points dans le polygone.
@@ -58,6 +58,18 @@ void P_open (Image * i , Polygon * p)
 {	
 	I_fill (i , C_new (0 , 0 , 0)) ; // Peindre l'image en noir.
 	P_draw (i , p) ; // Tracer le polygone.
+}
+
+void P_vertexSelected (Point * p)
+{
+	glColor3d (1 , 1 , 1) ; // Couleur du carre.
+	
+	glBegin (GL_LINE_LOOP) ; // Tracer des lignes.
+		glVertex3d (p -> x - 10 , p -> y - 10 , 0) ;
+		glVertex3d (p -> x + 10 , p -> y - 10 , 0) ;
+		glVertex3d (p -> x + 10 , p -> y + 10 , 0) ;
+		glVertex3d (p -> x - 10 , p -> y + 10 , 0) ;
+	glEnd () ;
 }
 
 void P_draw (Image * i , Polygon * pp)
