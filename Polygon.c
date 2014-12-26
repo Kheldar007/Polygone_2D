@@ -17,15 +17,30 @@ Point * P_newPoint (int xx , int yy , int zz)
 	return result ; // Renvoyer le point.
 }
 
+void P_setPoint (Point * p , int x , int y , int z)
+{
+	p -> x = x ;
+	p -> y = y ;
+	p -> z = z ;
+}
+
 void P_printPoint (Point * p)
 {
-	printf ("(%d , %d , %d)\n" , p -> x , p -> y , p -> z) ; // Afficher les coordonnes du point.
+	if (p != NULL)
+	{
+		printf ("(%d , %d , %d)\n" , p -> x , p -> y , p -> z) ; // Afficher les coordonnes du point.
+	}
+}
+
+void P_deletePoint (Point * p)
+{
+	free (p) ;
 }
 
 Polygon * P_newPolygon (Point * pp)
 {
 	Polygon * result = (Polygon *) malloc (sizeof (Polygon)) ; // Allouer l'espace memoire.
-	result -> p = * pp ; // Mettre le point dans le polygone.
+	result -> p = pp ; // Mettre le point dans le polygone.
 	result -> next = NULL ; // Pas d'autre point pour le moment.
 	return result ; // Renvoyer le polynome.
 }
@@ -51,7 +66,7 @@ void P_close (Image * i , Polygon * p)
 		p_t = p_t -> next ; // Regarder le point suivant.
 	}
 	// Maintenant le dernier point est atteint.
-	I_bresenham (i , p_t -> p.x , p_t -> p.y , p -> p.x , p -> p.y) ; // Tracer une droite de Bresenham entre le dernier et le premier point.
+	I_bresenham (i , p_t -> p -> x , p_t -> p -> y , p -> p -> x , p -> p -> y) ; // Tracer une droite de Bresenham entre le dernier et le premier point.
 }
 
 void P_open (Image * i , Polygon * p)
@@ -85,35 +100,31 @@ float distanceBetweenVertices (Point * point1 , Point * point2)
 	return sqrt (sum) ; // Racine carree de l'ensemble.
 }
 
-Point * closestVertex (Polygon * pol , Point * poi)
+Point * P_closestVertex (Polygon * pol , Point * poi)
 {
-	float distance = -1 ; // Valeur de depart.
-	Polygon * pol0 = pol ; // Pour parcourir le polygone.
-
-	// Point *closest = (Point*)malloc(sizeof(Point));
-	// Polygon *tmp = polygon;
-	// Polygon *first = polygon;
-	// int min;
-// 
-	// closest->x = tmp->pt->x;
-	// closest->y = tmp->pt->y;
-// 
-	// min = sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2)); // distance entre 2 points
-// 
-	// tmp = tmp->next;
-// 
-	// while(tmp->pt->x != first->pt->x || tmp->pt->y != first->pt->y)
-	// {
-		// if(sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2)) < min)
-		// {
-			// min = sqrt(pow(tmp->pt->x-x, 2) + pow(tmp->pt->y-y, 2));
-			// closest->x = tmp->pt->x;
-			// closest->y = tmp->pt->y;
-		// }
-		// tmp = tmp->next;
-	// }
-	// 
-	// return closest;
+	Point * result  = NULL ;
+	
+	float distance  = -1 ; // Valeur de depart.
+	float distance0 = -1 ;
+	Polygon * pol0  = pol ; // Pour parcourir le polygone.
+	while (pol0 != NULL) // Tant qu'il y a des sommets dans le polygone.
+	{
+		distance0 = distanceBetweenVertices (poi , pol0 -> p) ;
+		if (distance == -1) // Premiere distance calculee.
+		{
+			distance = distance0 ;
+			result = pol0 -> p ; // Conserver le point.
+		}
+		else if (distance0 <= distance) // Si l'on a trouve un point plus proche.
+		{
+			distance = distance0 ; // Conserver la nouvelle distance.
+			result = pol0 -> p ; // Conserver le point.
+		}
+		
+		pol0 = pol0 -> next ; // Passer au sommet suivant.
+	}
+	
+	return result ; // Retourner le point le plus proche de poi.
 }
 
 void P_draw (Image * i , Polygon * pp)
@@ -123,8 +134,8 @@ void P_draw (Image * i , Polygon * pp)
 		Polygon * p_t = pp ; // Polygone temporaire.
 		while (p_t -> next != NULL) // Tant qu'il reste des points dans le polygone.
 		{
-			I_bresenham (i , p_t -> p.x , p_t -> p.y ,
-							 p_t -> next -> p.x , p_t -> next -> p.y) ; // Tracer une droite de Bresenham entre le point courant et le suivant.
+			I_bresenham (i , p_t -> p -> x , p_t -> p -> y ,
+							 p_t -> next -> p -> x , p_t -> next -> p -> y) ; // Tracer une droite de Bresenham entre le point courant et le suivant.
 			p_t = p_t -> next ; // Regarder le point suivant.
 		}
 	}

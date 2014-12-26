@@ -32,7 +32,7 @@ typedef struct edge
 
 typedef struct polygon
 {
-	Point p ; // Un point.
+	Point * p ; // Un point.
 	struct polygon * next ; // Le point suivant.
 } Polygon ; // Un ensemble de points.
 
@@ -46,10 +46,23 @@ typedef struct polygon
  */
 Point * P_newPoint (int xx , int yy , int zz) ;
 /**
+ * @brief Mettre a jour les coordonnees du point.
+ * @param p Le point.
+ * @param x La nouvelle abscisse du point.
+ * @param y La nouvelle ordonnee du point.
+ * @param z La nouvelle coordonnee z.
+ */
+void P_setPoint (Point * p , int x , int y , int z) ;
+/**
  * @brief Afficher les coordonnes d'un point.
  * @param p Le point.
  */
 void P_printPoint (Point * p) ;
+/**
+ * @brief Liberer la memoire.
+ * @param p Le point.
+ */
+void P_deletePoint (Point * p) ;
 
 
 /**
@@ -88,6 +101,13 @@ void P_vertexSelected (Point * p) ;
  * @result Distance cartesienne entre les points.
  */
 float distanceBetweenVertices (Point * point1 , Point * point2) ;
+/**
+ * @brief  Trouver le point le plus proche appartenant a un polygone.
+ * @param  pol Le polygone.
+ * @param  poi Le point.
+ * @result Le point le plus proche de poi dans pol.
+ */
+Point * P_closestVertex (Polygon * pol , Point * poi) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

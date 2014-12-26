@@ -29,10 +29,11 @@
 
 Image *img;
 Polygon * p = NULL ; // Pour l'instant le polygone est vide.
-Point * pointSelected ;
+Point * pointSelected = NULL ;
 
 int closed = FALSE ; // Le polygone est ouvert.
 int mode = APPEND ; // Par defaut, mode "append".
+int selection = FALSE ; // Si un point est selectionne, pour le mode vertex.
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -47,9 +48,9 @@ void display_CB()
     	
 	I_draw(img);
 	P_draw (img , p) ; // Tracer le polygone.
-	if (mode == VERTEX)
+	if ((mode == VERTEX) && (selection == TRUE))
 	{
-		P_vertexSelected (pointSelected) ; // Tracer un marqueur autour du point selectionne.
+		P_vertexSelected (P_closestVertex (p , pointSelected)) ; // Tracer un marqueur autour du point selectionne.
 	}
 
     glutSwapBuffers();
@@ -63,7 +64,10 @@ void display_CB()
 
 void mouse_CB(int button, int state, int x, int y)
 {
+	// Point * bin = pointSelected ;
 	pointSelected = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.	
+	// P_deletePoint (bin) ;
+	
 	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode != VERTEX) &&
 														   (mode != EDGE)) // En mode "append".
 	{	
@@ -79,7 +83,7 @@ void mouse_CB(int button, int state, int x, int y)
 	}
 	else if ((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode == VERTEX)) // En mode "vertex".
 	{
-		// P_vertexSelected (pointSelected) ; // Tracer un marqueur autour du point selectionne.
+		selection = TRUE ; // Un point a ete selectionne.
 	}
 	glutPostRedisplay();
 }
