@@ -18,3 +18,11 @@ Fonctionnalites du programme
 - tracer un polygone en créant les points en faisant des clics gauche
 - 'c' : fermer/ouvrir le polygone
 - 'f' : remplir/vider le polygone
+- 'a' : mode "append" -> pour ajouter des points au polygone
+- 'v' : mode "vertex" -> pour selectionner un point du polygone
+- 'e' : mode "edge"   -> pour selectionner une arete
+
+Differents modes
+- append : a chaque clic, un nouveau sommet est ajoute au polygone
+- vertex : chaque clic selectionne un sommet du polygone
+- edge

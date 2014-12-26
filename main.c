@@ -71,6 +71,7 @@ void mouse_CB(int button, int state, int x, int y)
 	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode != VERTEX) &&
 														   (mode != EDGE)) // En mode "append".
 	{	
+		selection = FALSE ; // On ne selectionne rien.
 		if (p == NULL) // Si le polygone est vide.
 		{
 			p = P_newPolygon (pointSelected) ; // Creer un nouveau polygone.

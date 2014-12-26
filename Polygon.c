@@ -77,14 +77,17 @@ void P_open (Image * i , Polygon * p)
 
 void P_vertexSelected (Point * p)
 {
-	glColor3d (1 , 1 , 1) ; // Couleur du carre.
-	
-	glBegin (GL_LINE_LOOP) ; // Tracer des lignes.
-		glVertex3d (p -> x - SQUARE , p -> y - SQUARE , 0) ;
-		glVertex3d (p -> x + SQUARE , p -> y - SQUARE , 0) ;
-		glVertex3d (p -> x + SQUARE , p -> y + SQUARE , 0) ;
-		glVertex3d (p -> x - SQUARE , p -> y + SQUARE , 0) ;
-	glEnd () ;
+	if (p != NULL)
+	{
+		glColor3d (1 , 1 , 1) ; // Couleur du carre.
+		
+		glBegin (GL_LINE_LOOP) ; // Tracer des lignes.
+			glVertex3d (p -> x - SQUARE , p -> y - SQUARE , 0) ;
+			glVertex3d (p -> x + SQUARE , p -> y - SQUARE , 0) ;
+			glVertex3d (p -> x + SQUARE , p -> y + SQUARE , 0) ;
+			glVertex3d (p -> x - SQUARE , p -> y + SQUARE , 0) ;
+		glEnd () ;
+	}
 }
 
 float distanceBetweenVertices (Point * point1 , Point * point2)
