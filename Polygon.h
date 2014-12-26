@@ -12,7 +12,7 @@
 # include <stdlib.h>
 # include "Image.h"
 
-# define SQUARE 13 // Pour la taille du carre de selection.
+# define SQUARE 5 // Pour la taille du carre de selection.
 
 
 typedef struct
