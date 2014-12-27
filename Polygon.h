@@ -109,12 +109,19 @@ float distanceBetweenVertices (Point * point1 , Point * point2) ;
  */
 Point * P_closestVertex (Polygon * pol , Point * poi) ;
 /**
- * @brief  Trouver le point precedent a un point selectionne dans un polygone.
+ * @brief  Trouver le point precedent un point selectionne dans un polygone.
  * @param  pol Le polygone.
  * @param  poi Le point selectionne.
- * @return Le point precedent de poi.
+ * @return Le point precedent poi dans pol.
  */
 Point * P_previousVertex (Polygon * pol , Point * poi) ;
+/**
+ * @brief  Trouver le point suivant un point selectionne dans un polygone.
+ * @param  pol Le polygone.
+ * @param  poi Le point selectionne.
+ * @return Le point suivant poi dans pol.
+ */
+Point * P_nextVertex (Polygon * pol , Point * poi) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

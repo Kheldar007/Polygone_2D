@@ -160,9 +160,17 @@ void special_CB(int key, int x, int y)
 	case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
 	case 104 : // Page precedente.
 	{
-		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans les autres modes cette fonctionnalite n'est pas utilisee, et il faut qu'un point soit selectionne.
+		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode vertex, et il faut qu'un point soit selectionne.
 		{
 			pointSelected = P_previousVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point precedent.
+		}
+		break ;
+	}
+	case 105 : // Page suivante.
+	{
+		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode vertex, et il faut qu'un point soit selectionne.
+		{
+			pointSelected = P_nextVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point suivant.
 		}
 		break ;
 	}
