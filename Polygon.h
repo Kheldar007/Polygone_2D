@@ -139,6 +139,27 @@ Point * P_nextVertex (Polygon * pol , Point * poi) ;
  * @param p     Le point a modifier.
  */
 void P_moveUp (Image * image , Polygon * pol , Point * p) ;
+/**
+ * @brief Deplacer un point vers le bas.
+ * @param image L'image ou se situe le polygone.
+ * @param pol   Le polygone contenant le point.
+ * @param p     Le point a modifier.
+ */
+void P_moveDown (Image * image , Polygon * pol , Point * p) ;
+/**
+ * @brief Deplacer un point vers la droite.
+ * @param image L'image ou se situe le polygone.
+ * @param pol   Le polygone contenant le point.
+ * @param p     Le point a modifier.
+ */
+void P_moveRight (Image * image , Polygon * pol , Point * p) ;
+/**
+ * @brief Deplacer un point vers la droite.
+ * @param image L'image ou se situe le polygone.
+ * @param pol   Le polygone contenant le point.
+ * @param p     Le point a modifier.
+ */
+void P_moveLeft (Image * image , Polygon * pol , Point * p) ;
 
 /******************************************************************************/
 /**

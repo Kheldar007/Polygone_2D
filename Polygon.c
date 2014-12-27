@@ -191,26 +191,68 @@ void P_moveUp (Image * image , Polygon * pol , Point * poi)
 	}
 }
 
-// void P_moveDown (Image * image , Polygon * pol , Point * poi)
-// {
-	// if (poi != NULL)
-	// {
-		// if (poi -> x > 0) // Si le point n'est pas deja tout en haut.
-		// {
-			// Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
-			// 
-			// while (pol0 != NULL) // Parcourir le polygone.
-			// {
-				// if (pol0 -> p == poi) // Le point a ete trouve.
-				// {
-					// P_setPoint (pol0 -> p , pol0 -> p -> x , pol0 -> p -> y + 1 , pol0 -> p -> z) ; // Deplacer le point vers le haut.
-					// P_open (image , pol) ;
-				// }
-				// pol0 = pol0 -> next ; // Deplacer le pointeur
-			// }
-		// }
-	// }
-// }
+void P_moveDown (Image * image , Polygon * pol , Point * poi)
+{
+	if (poi != NULL)
+	{
+		if (poi -> y > 0) // Si le point n'est pas deja tout en bas.
+		{
+			Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
+			
+			while (pol0 != NULL) // Parcourir le polygone.
+			{
+				if (pol0 -> p == poi) // Le point a ete trouve.
+				{
+					P_setPoint (pol0 -> p , pol0 -> p -> x , pol0 -> p -> y - 1 , pol0 -> p -> z) ; // Deplacer le point vers le haut.
+					P_open (image , pol) ;
+				}
+				pol0 = pol0 -> next ; // Deplacer le pointeur
+			}
+		}
+	}
+}
+
+void P_moveRight (Image * image , Polygon * pol , Point * poi)
+{
+	if (poi != NULL)
+	{
+		if (poi -> x < image -> _width - 1) // Si le point n'est pas deja tout a droite.
+		{
+			Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
+			
+			while (pol0 != NULL) // Parcourir le polygone.
+			{
+				if (pol0 -> p == poi) // Le point a ete trouve.
+				{
+					P_setPoint (pol0 -> p , pol0 -> p -> x + 1 , pol0 -> p -> y , pol0 -> p -> z) ; // Deplacer le point vers le haut.
+					P_open (image , pol) ;
+				}
+				pol0 = pol0 -> next ; // Deplacer le pointeur
+			}
+		}
+	}
+}
+
+void P_moveLeft (Image * image , Polygon * pol , Point * poi)
+{
+	if (poi != NULL)
+	{
+		if (poi -> x > 0) // Si le point n'est pas deja tout a gauche.
+		{
+			Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
+			
+			while (pol0 != NULL) // Parcourir le polygone.
+			{
+				if (pol0 -> p == poi) // Le point a ete trouve.
+				{
+					P_setPoint (pol0 -> p , pol0 -> p -> x - 1 , pol0 -> p -> y , pol0 -> p -> z) ; // Deplacer le point vers le haut.
+					P_open (image , pol) ;
+				}
+				pol0 = pol0 -> next ; // Deplacer le pointeur
+			}
+		}
+	}
+}
 
 void P_draw (Image * i , Polygon * pp)
 {

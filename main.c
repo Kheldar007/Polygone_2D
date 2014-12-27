@@ -166,9 +166,42 @@ void special_CB(int key, int x, int y)
 		}
 		break;
 	}
-	case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
-	case GLUT_KEY_LEFT  : I_move(img,d,0); break;
-	case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
+	case GLUT_KEY_DOWN :
+	{
+		if (mode != VERTEX) // Par defaut.
+		{
+			I_move(img,0,-d);
+		}
+		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		{
+			P_moveDown (img , p , P_closestVertex (p , pointSelected)) ;
+		}
+		break;
+	}
+	case GLUT_KEY_LEFT :
+	{
+		if (mode != VERTEX) // Par defaut.
+		{
+			I_move(img,d,0);
+		}
+		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		{
+			P_moveLeft (img , p , P_closestVertex (p , pointSelected)) ;
+		}
+		break;
+	}
+	case GLUT_KEY_RIGHT :
+	{
+		if (mode != VERTEX) // Par defaut.
+		{
+			I_move(img,-d,0);
+		}
+		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		{
+			P_moveRight (img , p , P_closestVertex (p , pointSelected)) ;
+		}
+		break;
+	}
 	case 104 : // Page precedente.
 	{
 		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
