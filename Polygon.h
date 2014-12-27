@@ -108,6 +108,10 @@ float distanceBetweenVertices (Point * point1 , Point * point2) ;
  * @result Le point le plus proche de poi dans pol.
  */
 Point * P_closestVertex (Polygon * pol , Point * poi) ;
+
+
+/************************ Vertex precedent ou suivant. ************************/
+
 /**
  * @brief  Trouver le point precedent un point selectionne dans un polygone.
  * @param  pol Le polygone.
@@ -122,6 +126,21 @@ Point * P_previousVertex (Polygon * pol , Point * poi) ;
  * @return Le point suivant poi dans pol.
  */
 Point * P_nextVertex (Polygon * pol , Point * poi) ;
+
+/******************************************************************************/
+
+
+/***************************** Deplacer un point. *****************************/
+
+/**
+ * @brief Deplacer un point vers le haut.
+ * @param image L'image ou se situe le polygone.
+ * @param pol   Le polygone contenant le point.
+ * @param p     Le point a modifier.
+ */
+void P_moveUp (Image * image , Polygon * pol , Point * p) ;
+
+/******************************************************************************/
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

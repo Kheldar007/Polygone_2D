@@ -154,13 +154,24 @@ void special_CB(int key, int x, int y)
 
 	switch(key)
 	{
-	case GLUT_KEY_UP    : I_move(img,0,d); break;
+	case GLUT_KEY_UP :
+	{
+		if (mode != VERTEX) // Par defaut.
+		{
+			I_move(img,0,d);
+		}
+		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		{
+			P_moveUp (img , p , P_closestVertex (p , pointSelected)) ;
+		}
+		break;
+	}
 	case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
 	case GLUT_KEY_LEFT  : I_move(img,d,0); break;
 	case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
 	case 104 : // Page precedente.
 	{
-		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode vertex, et il faut qu'un point soit selectionne.
+		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
 		{
 			pointSelected = P_previousVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point precedent.
 		}
@@ -168,7 +179,7 @@ void special_CB(int key, int x, int y)
 	}
 	case 105 : // Page suivante.
 	{
-		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode vertex, et il faut qu'un point soit selectionne.
+		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
 		{
 			pointSelected = P_nextVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point suivant.
 		}

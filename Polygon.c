@@ -170,6 +170,27 @@ Point * P_nextVertex (Polygon * pol , Point * poi)
 	return poi ;
 }
 
+void P_moveUp (Image * image , Polygon * pol , Point * poi)
+{
+	if (poi != NULL)
+	{
+		if (poi -> x > 0) // Si le point n'est pas deja tout en haut.
+		{
+			Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
+			
+			while (pol0 != NULL) // Parcourir le polygone.
+			{
+				if (pol0 -> p == poi) // Le point a ete trouve.
+				{
+					P_setPoint (pol0 -> p , pol0 -> p -> x , pol0 -> p -> y + 1 , pol0 -> p -> z) ; // Deplacer le point vers le haut.
+					P_open (image , pol) ;
+				}
+				pol0 = pol0 -> next ; // Deplacer le pointeur
+			}
+		}
+	}
+}
+
 void P_draw (Image * i , Polygon * pp)
 {
 	if (pp != NULL) // Si le polygone contient quelque chose.

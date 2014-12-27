@@ -23,7 +23,9 @@ Fonctionnalites du programme
 - 'e' : mode "edge"   -> pour selectionner une arete
 
 Differents modes
-- append : a chaque clic, un nouveau sommet est ajoute au polygone
-- vertex : chaque clic selectionne un sommet du polygone. En cliquant sur "page
-precedente" ou "page suivante", on selectionne le sommet precedent ou suivant.
+- append : a chaque clic, un nouveau sommet est ajoute au polygone.
+- vertex : chaque clic selectionne un sommet du polygone.
+En cliquant sur "page precedente" ou "page suivante", on selectionne le sommet
+precedent ou suivant.
+Les fleches permettent de deplacer un sommet selectionne.
 - edge
