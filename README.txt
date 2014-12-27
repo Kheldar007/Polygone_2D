@@ -24,5 +24,6 @@ Fonctionnalites du programme
 
 Differents modes
 - append : a chaque clic, un nouveau sommet est ajoute au polygone
-- vertex : chaque clic selectionne un sommet du polygone
+- vertex : chaque clic selectionne un sommet du polygone. En cliquant sur "page
+precedente" ou "page suivante", on selectionne le sommet precedent ou suivant.
 - edge

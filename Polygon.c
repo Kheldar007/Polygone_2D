@@ -130,6 +130,26 @@ Point * P_closestVertex (Polygon * pol , Point * poi)
 	return result ; // Retourner le point le plus proche de poi.
 }
 
+Point * P_previousVertex (Polygon * pol , Point * poi)
+{
+	Polygon * pol0 = pol ; // Pour parcourir les points du polygone.
+	
+	if ((pol -> p != poi) && (pol != NULL)) // Si le point n'est pas le premier.
+	{
+		while (pol0 -> next != NULL) // Parcourir le polygone.
+		{
+			if ((pol0 -> next -> p -> x == poi -> x) && (pol0 -> next -> p -> y == poi -> y)) // Si le point selectionne est le suivant.
+			{
+				return pol0 -> p ; // Retourner le point courant.
+			}
+			
+			pol0 = pol0 -> next ; // Point suivant.
+		}
+	}
+	
+	return poi ;
+}
+
 void P_draw (Image * i , Polygon * pp)
 {
 	if (pp != NULL) // Si le polygone contient quelque chose.
