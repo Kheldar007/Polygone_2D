@@ -72,11 +72,33 @@ void P_deletePoint (Point * p) ;
  */
 Polygon * P_newPolygon (Point * p) ;
 /**
- * @brief Ajouter un point au polygone.
+ * @brief  Retourner le premier point d'un polygone.
+ * @param  p Le polygone.
+ */
+Point * P_firstVertex (Polygon * p) ;
+/**
+ * @brief  Retourner le dernier point d'un polygone.
+ * @param  p Le polygone.
+ */
+Point * P_lastVertex (Polygon * p) ;
+/**
+ * @brief Afficher les coordonnes des sommets d'un polygone.
+ * @param p Le polygone.
+ */
+void P_printPolygon (Polygon * p) ;
+/**
+ * @brief Ajouter un point au polygone. Le polygone doit exister.
  * @param pol Le polygone.
  * @param poi Le point.
  */
 void P_addPoint (Polygon * pol , Point * poi) ;
+/**
+ * @brief Supprimer un point d'un polygone. Le polygone doit contenir au moins trois points.
+ * @param image L'image sur laquelle est dessine le polygone.
+ * @param pol   Le polygone.
+ * @param poi   Le point a supprimer de pol.
+ */
+void P_deletePointFromPolygon (Image * image , Polygon * pol , Point * poi) ;
 /**
  * @brief Afficher la ligne fermant le polygone.
  * @param i L'image sur laquelle tracer le polygone.
@@ -162,6 +184,8 @@ void P_moveRight (Image * image , Polygon * pol , Point * p) ;
 void P_moveLeft (Image * image , Polygon * pol , Point * p) ;
 
 /******************************************************************************/
+
+
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

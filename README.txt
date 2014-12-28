@@ -28,4 +28,6 @@ Differents modes
 En cliquant sur "page precedente" ou "page suivante", on selectionne le sommet
 precedent ou suivant.
 Les fleches permettent de deplacer un sommet selectionne.
+La touche "suppr" permet de supprimer un sommet du polygone qui n'est ni le
+premier ni le dernier.
 - edge

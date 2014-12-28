@@ -135,6 +135,14 @@ void keyboard_CB(unsigned char key, int x, int y)
 		}
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
+		case 127 : // Suppr.
+		{
+			if ((mode == VERTEX) && (selection == TRUE))
+			{
+				P_deletePointFromPolygon (img , p , P_closestVertex (p , pointSelected)) ;
+			}
+			break ;
+		}
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
@@ -154,71 +162,71 @@ void special_CB(int key, int x, int y)
 
 	switch(key)
 	{
-	case GLUT_KEY_UP :
-	{
-		if (mode != VERTEX) // Par defaut.
+		case GLUT_KEY_UP :
 		{
-			I_move(img,0,d);
+			if (mode != VERTEX) // Par defaut.
+			{
+				I_move(img,0,d);
+			}
+			else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+			{
+				P_moveUp (img , p , P_closestVertex (p , pointSelected)) ;
+			}
+			break;
 		}
-		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		case GLUT_KEY_DOWN :
 		{
-			P_moveUp (img , p , P_closestVertex (p , pointSelected)) ;
+			if (mode != VERTEX) // Par defaut.
+			{
+				I_move(img,0,-d);
+			}
+			else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+			{
+				P_moveDown (img , p , P_closestVertex (p , pointSelected)) ;
+			}
+			break;
 		}
-		break;
-	}
-	case GLUT_KEY_DOWN :
-	{
-		if (mode != VERTEX) // Par defaut.
+		case GLUT_KEY_LEFT :
 		{
-			I_move(img,0,-d);
+			if (mode != VERTEX) // Par defaut.
+			{
+				I_move(img,d,0);
+			}
+			else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+			{
+				P_moveLeft (img , p , P_closestVertex (p , pointSelected)) ;
+			}
+			break;
 		}
-		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		case GLUT_KEY_RIGHT :
 		{
-			P_moveDown (img , p , P_closestVertex (p , pointSelected)) ;
+			if (mode != VERTEX) // Par defaut.
+			{
+				I_move(img,-d,0);
+			}
+			else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+			{
+				P_moveRight (img , p , P_closestVertex (p , pointSelected)) ;
+			}
+			break;
 		}
-		break;
-	}
-	case GLUT_KEY_LEFT :
-	{
-		if (mode != VERTEX) // Par defaut.
+		case 104 : // Page precedente.
 		{
-			I_move(img,d,0);
+			if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
+			{
+				pointSelected = P_previousVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point precedent.
+			}
+			break ;
 		}
-		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
+		case 105 : // Page suivante.
 		{
-			P_moveLeft (img , p , P_closestVertex (p , pointSelected)) ;
+			if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
+			{
+				pointSelected = P_nextVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point suivant.
+			}
+			break ;
 		}
-		break;
-	}
-	case GLUT_KEY_RIGHT :
-	{
-		if (mode != VERTEX) // Par defaut.
-		{
-			I_move(img,-d,0);
-		}
-		else if ((mode == VERTEX) && (selection == TRUE)) // En mode "vertex".
-		{
-			P_moveRight (img , p , P_closestVertex (p , pointSelected)) ;
-		}
-		break;
-	}
-	case 104 : // Page precedente.
-	{
-		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
-		{
-			pointSelected = P_previousVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point precedent.
-		}
-		break ;
-	}
-	case 105 : // Page suivante.
-	{
-		if ((mode == VERTEX) && (pointSelected != NULL)) // Dans le mode "vertex", et il faut qu'un point soit selectionne.
-		{
-			pointSelected = P_nextVertex (p , P_closestVertex (p , pointSelected)) ; // Selectionner le point suivant.
-		}
-		break ;
-	}
-	default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
+		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
 }

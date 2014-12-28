@@ -45,6 +45,47 @@ Polygon * P_newPolygon (Point * pp)
 	return result ; // Renvoyer le polynome.
 }
 
+Point * P_firstVertex (Polygon * p)
+{
+	if (p != NULL) // Si p existe.
+	{
+		return p -> p ; // Retourner le premier point de p.
+	}
+	return NULL ;
+}
+
+Point * P_lastVertex (Polygon * p)
+{
+	if (p != NULL) // Si p existe.
+	{
+		Polygon * p0 = p ; // Pour parcourir le polygone.
+		while (p0 -> next != NULL) // Chercher le dernier sommet.
+		{
+			p0 = p0 -> next ; // Point suivant.
+		}
+		return p0 -> p ; // Retourner le dernier point de p.
+	}
+	return NULL ;
+}
+
+void P_printPolygon (Polygon * p)
+{
+	if (p != NULL) // Si le polygone n'est pas vide.
+	{
+		int vertices = 0 ;
+		Polygon * p0 = p ; // Pour parcourir les sommets.
+		while (p0 != NULL)
+		{
+			vertices ++ ;
+			printf ("Sommet %d " , vertices) ;
+			P_printPoint (p -> p) ; // Afficher les coordonnes du sommet courant.
+			
+			p0 = p0 -> next ; // Sommet suivant.
+		}
+		printf ("\n") ;
+	}
+}
+
 void P_addPoint (Polygon * pol , Point * poi)
 {
 	Polygon * p_t = pol ; // Polygone temporaire.
@@ -54,6 +95,46 @@ void P_addPoint (Polygon * pol , Point * poi)
 	}
 	Polygon * newPolygon = P_newPolygon (poi) ; // Creer une structure et mettre le point dedans.
 	p_t -> next = newPolygon ; // Ajouter le point au polygone.
+}
+
+void P_deletePointFromPolygon (Image * image , Polygon * pol , Point * poi)
+{
+	if ((pol != NULL) && (poi != P_firstVertex (pol)) && (poi != P_lastVertex (pol))) // Le polygone doit exister et l'on ne peut pas supprimer le premier ou le dernier point.
+	{
+		if (pol -> p == poi) // Point au debut.
+		{
+			if (pol -> next == NULL) // Le polygone n'est constitue que d'un point.
+			{
+				Polygon * bin = pol ;
+				pol = NULL ; // Supprimer le point.
+				free (bin) ;
+				P_open (image , pol) ;
+			}
+			else
+			{
+				Polygon * bin = pol ;
+				pol = pol -> next ; // Supprimer le premier point.
+				free (bin) ;
+				P_open (image , pol) ;
+			}
+		}
+		else
+		{
+			Polygon * p_t = pol ; // Polygone temporaire.
+			while ((p_t -> next != NULL) && (p_t != NULL)) // Tant qu'il reste des points dans le polygone.
+			{
+				if (p_t -> next -> p == poi) // Le point a ete trouve.
+				{
+					Polygon * bin = p_t -> next ;
+					p_t -> next = p_t -> next -> next ; // Supprimer le point.
+					free (bin) ;
+					P_open (image , pol) ;
+				}
+				
+				p_t = p_t -> next ; // Regarder le point suivant.
+			}
+		}
+	}
 }
 
 void P_close (Image * i , Polygon * p)
