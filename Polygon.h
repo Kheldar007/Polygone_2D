@@ -12,7 +12,11 @@
 # include <stdlib.h>
 # include "Image.h"
 
-# define SQUARE 5 // Pour la taille du carre de selection.
+/********************************* Bouleens. **********************************/
+# define FALSE 0
+# define TRUE  1
+/******************************************************************************/
+# define SQUARE 7 // Pour la taille du carre de selection.
 
 
 typedef struct
@@ -24,10 +28,10 @@ typedef struct
 
 typedef struct edge
 {
-	Point pMin ; // Exremite de l'arete donc l'ordonnee est inferieure ou egale a celle de l'autre extremite.
-	Point pMax ; // Autre extremite.
+	Point * pMin ; // Exremite de l'arete donc l'ordonnee est inferieure ou egale a celle de l'autre extremite.
+	Point * pMax ; // Autre extremite.
 	int xIntersection ; // Absisse de l'intersection avec le scan-line courant.
-	int counter ; // Compteur permettant d'incrmenter l'absisse du point d'intersection.
+	int counter ; // Compteur permettant d'incrementer l'absisse du point d'intersection.
 } Edge ;
 
 typedef struct polygon
@@ -134,25 +138,27 @@ Point * P_closestVertex (Polygon * pol , Point * poi) ;
 
 /************************ Vertex precedent ou suivant. ************************/
 
+
 /**
  * @brief  Trouver le point precedent un point selectionne dans un polygone.
- * @param  pol Le polygone.
- * @param  poi Le point selectionne.
+ * @param  pol    Le polygone.
+ * @param  poi    Le point selectionne.
+ * @param  closed Si le polygone est ouvert ou ferme.
  * @return Le point precedent poi dans pol.
  */
-Point * P_previousVertex (Polygon * pol , Point * poi) ;
+Point * P_previousVertex (Polygon * pol , Point * poi , int closed) ;
 /**
  * @brief  Trouver le point suivant un point selectionne dans un polygone.
- * @param  pol Le polygone.
- * @param  poi Le point selectionne.
+ * @param  pol    Le polygone.
+ * @param  poi    Le point selectionne.
+ * @param  closed Si le polygone est ouvert ou ferme.
  * @return Le point suivant poi dans pol.
  */
-Point * P_nextVertex (Polygon * pol , Point * poi) ;
-
-/******************************************************************************/
+Point * P_nextVertex (Polygon * pol , Point * poi , int closed) ;
 
 
 /***************************** Deplacer un point. *****************************/
+
 
 /**
  * @brief Deplacer un point vers le haut.
@@ -183,9 +189,55 @@ void P_moveRight (Image * image , Polygon * pol , Point * p) ;
  */
 void P_moveLeft (Image * image , Polygon * pol , Point * p) ;
 
+
 /******************************************************************************/
 
 
+/**
+ * @brief  Trouver l'arete la plus proche d'un point donne.
+ * @param  pol    Le polygone contenant l'arete.
+ * @param  poi    Le point.
+ * @param  closed Si le polygone est ferme ou ouvert.
+ * @return L'arete la plus proche de poi appartenant a pol.
+ */
+Edge * P_closestEdge (Polygon * pol , Point * poi , int closed) ;
+/**
+ * @brief Colorier une arete.
+ * @param e L'arete selectionnee.
+ */
+void P_edgeSelected (Edge * e) ;
+
+
+/*********************** Arete precedente ou suivante. ************************/
+
+
+/**
+ * @brief  Trouver l'arete precedente dans un polygone.
+ * @param  p      Le polygone.
+ * @param  e      L'arete de depart.
+ * @param  closed Si le polygone est ouvert ou ferme.
+ * @return L'arete precedent e.
+ */
+Edge * P_previousEdge (Polygon * p , Edge * e , int closed) ;
+/**
+ * @brief  Trouver l'arete suivante dans un polygone.
+ * @param  p      Le polygone.
+ * @param  e      L'arete de depart.
+ * @param  closed Si le polygone est ouvert ou ferme.
+ * @return L'arete suivant e.
+ */
+Edge * P_nextEdge (Polygon * p , Edge * e , int closed) ;
+
+
+/******************************************************************************/
+
+
+/**
+ * @brief Inserer un point au milieu d'une arete.
+ * @param p Le polygone.
+ * @param e L'arete selectionnee.
+ */
+void P_insertVertex (Polygon * p , Edge * e) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

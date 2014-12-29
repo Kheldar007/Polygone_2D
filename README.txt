@@ -30,4 +30,9 @@ precedent ou suivant.
 Les fleches permettent de deplacer un sommet selectionne.
 La touche "suppr" permet de supprimer un sommet du polygone qui n'est ni le
 premier ni le dernier.
-- edge
+- edge : claque clic selectionne une arete du polygone.
+En cliquant sur "page precedente" ou "page suivante", on selectionne l'arete
+precedente ou suivante.
+En cliquant avec le bouton central de la souris sur une arete selectionnee, on
+rejoute un sommet au milieu de cette arete. Il faut que le polygone soit ouvert
+pour une meilleure clarte.
