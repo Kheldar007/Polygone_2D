@@ -30,6 +30,7 @@ Point * pointSelected = NULL ;
 Edge * edgeSelected = NULL ;
 
 int closed = FALSE ; // Le polygone est ouvert.
+int filled = FALSE ; // Le polygone est vide.
 int mode = APPEND ; // Par defaut, mode "append".
 int selectionVertex = FALSE ; // Si un point est selectionne, pour le mode vertex.
 int selectionEdge = FALSE ; // Si un point est selectionne, pour le mode vertex.
@@ -151,6 +152,19 @@ void keyboard_CB(unsigned char key, int x, int y)
 		}
 		case 'f' : // Remplir ou vider le polygone.
 		{
+			if (filled == FALSE)
+			{
+				filled = TRUE ;
+				BoundingBox * boundingBox = P_createBoundingBox (p) ;
+				P_fill (img , p , closed) ;
+				free (boundingBox -> upperLeft) ;
+				free (boundingBox -> lowerRight) ;
+				free (boundingBox) ;
+			}
+			else
+			{
+				filled = FALSE ;
+			}
 		}
 		case 'i' : I_zoomInit(img); break;
 		case 'v' : // Mode "vertex". Un seul sommet est selectionne.

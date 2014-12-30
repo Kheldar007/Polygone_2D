@@ -488,7 +488,6 @@ void P_insertVertex (Polygon * p , Edge * e)
 		Polygon * p0 = p ; // Pour parcourir le polygone.
 		while ((p0 != NULL) && ((p0 -> p != e -> pMin) && (p0 -> p != e -> pMax))) // Parcourir le polygone.
 		{			
-			printf ("hello I'm the doctor\n") ;
 			p0 = p0 -> next ; // Sommet suivant.
 		}
 		// p0 est adjacent a l'arete.
@@ -503,6 +502,108 @@ void P_insertVertex (Polygon * p , Edge * e)
 		p0 -> next = newPolygon ;
 		/******************************************************************************/
 	}
+}
+
+BoundingBox * P_createBoundingBox (Polygon * p)
+{
+	BoundingBox * result = (BoundingBox *) malloc (sizeof (BoundingBox)) ; // Allocation memoire.
+	
+	if (p != NULL) // Si le polygone n'est pas vide.
+	{
+		Polygon * p0 = p ; // Pour parcourir le polygone.
+		int xMin = p -> p -> x , yMin = p -> p -> y , xMax = p -> p -> x ,
+			yMax = p -> p -> y ; // Coordonnes de la bounding box.
+		while (p0 != NULL)
+		{
+			if (p0 -> p -> x < xMin)
+			{
+				xMin = p0 -> p -> x ;
+			}
+			if (p0 -> p -> y < yMin)
+			{
+				yMin = p0 -> p -> y ;
+			}
+			if (p0 -> p -> x > xMax)
+			{
+				xMax = p0 -> p -> x ;
+			}
+			if (p0 -> p -> y > yMax)
+			{
+				yMax = p0 -> p -> y ;
+			}
+			
+			p0 = p0 -> next ; // Deplacer le pointeur.
+		}
+		result -> upperLeft = P_newPoint (xMin , yMax , 0) ;
+		result -> lowerRight = P_newPoint (xMax , yMin , 0) ;
+		
+		return result ;
+	}
+	
+	return NULL ;
+}
+
+void P_fill (Image * image , Polygon * p , int closed)
+{
+	// if (closed == TRUE) // Le polygone doit etre ferme.
+	// {
+		// Edge ** list = P_edgeList (image , p) ;
+		// int nextEdgeIndex = 0 ;
+		// Edge * nextEdge = list [nextEdgeIndex] ;
+		// int nextYMin = nextEdge -> pMin -> y ;
+		// Edge ** list2 = (Edge **) malloc (edgesCount * sizeof (Edge *)) ;
+	// }
+}
+
+Edge ** P_edgeList (Image * image , Polygon * p)
+{
+	if (p != NULL)
+	{
+		edgesCount = 1 ;
+		Polygon * p0 = p ; // Parcourir le polygone.
+		while (p0 -> next != NULL) // Le polygone contient plus d'un sommet.
+		{
+			edgesCount ++ ; // Une arete de plus.
+			
+			p0 = p0 -> next ; // Point suivant.
+		}
+		if (edgesCount > 2) // Au minimum un triangle.
+		{
+			/**************************** Allocation memoire. *****************************/
+			Edge ** result = (Edge **) malloc (edgesCount * sizeof (Edge *)) ;
+			int i = 0 ;
+			while (i < edgesCount)
+			{
+				result [i] = (Edge *) malloc (sizeof (Edge)) ;
+				
+				i ++ ;
+			}
+			/************************* Creer le tableau d'aretes. *************************/
+			Polygon * pToModify = p ;
+			i = 0 ;
+			while (pToModify != NULL)
+			{
+				Polygon * p1 = pToModify ; // Autre temporaire.
+				Point * pointMin = pToModify -> p ;
+				while (p1 != NULL) // Parcourir le polygone.		
+				{
+					if (p1 -> p -> y < pointMin -> y) // Si le sommet est plus bas que yMin.
+					{
+						pointMin = p1 -> p ; // Nouveau point en bas.
+					}
+					
+					p1 = p1 -> next ; // Suivant.
+				}
+				result [i] -> pMin = pointMin ;
+				result [i] -> pMax = P_nextVertex (p , pointMin , TRUE) ;
+				i ++ ;
+				P_deletePointFromPolygon (image , pToModify , pointMin) ;
+			}
+			/******************************************************************************/
+		}
+	}
+	
+	return NULL ; // Pas d'aretes.
 }
 
 void P_draw (Image * i , Polygon * pp)

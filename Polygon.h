@@ -19,6 +19,9 @@
 # define SQUARE 7 // Pour la taille du carre de selection.
 
 
+int edgesCount ; // Nombres d'aretes du polygone.
+
+
 typedef struct
 {
 	int x ; // L'abscisse.
@@ -39,6 +42,12 @@ typedef struct polygon
 	Point * p ; // Un point.
 	struct polygon * next ; // Le point suivant.
 } Polygon ; // Un ensemble de points.
+
+typedef struct
+{
+	Point * upperLeft ; // Point en haut a gauche.
+	Point * lowerRight ; // Point en bas a droite.
+} BoundingBox ;
 
 
 /**
@@ -238,6 +247,26 @@ Edge * P_nextEdge (Polygon * p , Edge * e , int closed) ;
  * @param e L'arete selectionnee.
  */
 void P_insertVertex (Polygon * p , Edge * e) ;
+/**
+ * @brief Remplir un polygone.
+ * @param image  L'image.
+ * @param p      Le polygone.
+ * @param closed Si le polygone est ferme ou non.
+ */
+void P_fill (Image * image , Polygon * p , int closed) ;
+/**
+ * @brief  Liste des aretes d'un polygone.
+ * @param  image L'image.
+ * @param  p     Le polygone.
+ * @return Les aretes de p listees de bas en haut.
+ */
+Edge ** P_edgeList (Image * image , Polygon * p) ;
+/**
+ * @brief  Creer la bounding box.
+ * @param  p Le polygone.
+ * @return La bounding box de p.
+ */
+BoundingBox * P_createBoundingBox (Polygon * p) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.
