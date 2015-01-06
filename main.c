@@ -19,9 +19,8 @@
 # include "Polygon.h"
 
 /*********************************** Mode. ************************************/
-# define APPEND 2
-# define VERTEX 3
-# define EDGE   4
+enum enum_mode {APPEND , VERTEX , EDGE} ;
+typedef enum enum_mode e_mode ;
 /******************************************************************************/
 
 Image *img;
@@ -31,9 +30,10 @@ Edge * edgeSelected = NULL ;
 
 int closed = FALSE ; // Le polygone est ouvert.
 int filled = FALSE ; // Le polygone est vide.
-int mode = APPEND ; // Par defaut, mode "append".
+e_mode mode = APPEND ; // Par defaut, mode "append".
 int selectionVertex = FALSE ; // Si un point est selectionne, pour le mode vertex.
 int selectionEdge = FALSE ; // Si un point est selectionne, pour le mode vertex.
+BoundingBox * boundingBox = NULL ; // Pour le remplissage.
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -55,6 +55,37 @@ void display_CB()
 	else if ((mode == EDGE) && (selectionEdge == TRUE))
 	{
 		P_edgeSelected (edgeSelected) ; // Colorer l'arete selectionnee.
+	}
+	if (filled == FALSE)
+	{
+		if (p != NULL)
+		{
+			Polygon * p0 = p ; // Pour parcourir le polygone.
+			Point vertices [P_numberVertices (p)] ; // Tableau contenant les points du polygone.
+	
+			int i = 0 ;
+			while (p0 != NULL) // Parcourir le polygone.
+			{
+				vertices [i] = * (p0 -> p) ; // Prendre le point.
+				
+				i ++ ;
+				p0 = p0 -> next ;
+			}
+			boundingBox = P_createBoundingBox (p) ; // Mettre a jour la bounding box.
+			Color color = C_new (0 , 0.5 , 1) ; // Choisir la couleur pour remplir le polygone.
+			P_fill (img , i , vertices , closed , color , boundingBox) ; // Remplir le polygone.
+		}
+	}
+	else
+	{
+		if (closed == TRUE)
+		{
+			P_close (img , p) ;
+		}
+		else
+		{
+			P_open (img , p) ;
+		}
 	}
 
     glutSwapBuffers();
@@ -152,18 +183,16 @@ void keyboard_CB(unsigned char key, int x, int y)
 		}
 		case 'f' : // Remplir ou vider le polygone.
 		{
-			if (filled == FALSE)
+			if (closed == TRUE)
 			{
-				filled = TRUE ;
-				BoundingBox * boundingBox = P_createBoundingBox (p) ;
-				P_fill (img , p , closed) ;
-				free (boundingBox -> upperLeft) ;
-				free (boundingBox -> lowerRight) ;
-				free (boundingBox) ;
-			}
-			else
-			{
-				filled = FALSE ;
+				if (filled == FALSE)
+				{
+					filled = TRUE ;
+				}
+				else
+				{
+					filled = FALSE ;
+				}
 			}
 		}
 		case 'i' : I_zoomInit(img); break;
@@ -307,6 +336,9 @@ int main(int argc, char **argv)
 			// Color blanc = C_new(200,200,255);
 			// I_checker(img,rouge,blanc,50);
 		}
+		
+		boundingBox = P_createBoundingBox (p) ;
+		
 		int windowPosX = 100, windowPosY = 100;
 
 		glutInitWindowSize(largeur,hauteur);

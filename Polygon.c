@@ -58,12 +58,12 @@ Point * P_lastVertex (Polygon * p)
 {
 	if (p != NULL) // Si p existe.
 	{
-		Polygon * p0 = p ; // Pour parcourir le polygone.
-		while (p0 -> next != NULL) // Chercher le dernier sommet.
+		Polygon * p_t = p ; // Pour parcourir le polygone.
+		while (p_t -> next != NULL) // Chercher le dernier sommet.
 		{
-			p0 = p0 -> next ; // Point suivant.
+			p_t = p_t -> next ; // Point suivant.
 		}
-		return p0 -> p ; // Retourner le dernier point de p.
+		return p_t -> p ; // Retourner le dernier point de p.
 	}
 	return NULL ;
 }
@@ -73,14 +73,14 @@ void P_printPolygon (Polygon * p)
 	if (p != NULL) // Si le polygone n'est pas vide.
 	{
 		int vertices = 0 ;
-		Polygon * p0 = p ; // Pour parcourir les sommets.
-		while (p0 != NULL)
+		Polygon * p_t = p ; // Pour parcourir les sommets.
+		while (p_t != NULL)
 		{
 			vertices ++ ;
 			printf ("Sommet %d " , vertices) ;
 			P_printPoint (p -> p) ; // Afficher les coordonnes du sommet courant.
 			
-			p0 = p0 -> next ; // Sommet suivant.
+			p_t = p_t -> next ; // Sommet suivant.
 		}
 		printf ("\n") ;
 	}
@@ -485,12 +485,12 @@ void P_insertVertex (Polygon * p , Edge * e)
 {
 	if ((p != NULL) && (e != NULL))
 	{
-		Polygon * p0 = p ; // Pour parcourir le polygone.
-		while ((p0 != NULL) && ((p0 -> p != e -> pMin) && (p0 -> p != e -> pMax))) // Parcourir le polygone.
+		Polygon * p_t = p ; // Pour parcourir le polygone.
+		while ((p_t != NULL) && ((p_t -> p != e -> pMin) && (p_t -> p != e -> pMax))) // Parcourir le polygone.
 		{			
-			p0 = p0 -> next ; // Sommet suivant.
+			p_t = p_t -> next ; // Sommet suivant.
 		}
-		// p0 est adjacent a l'arete.
+		// p_t est adjacent a l'arete.
 		/************************** Creer le nouveau point. ***************************/
 		Point * newPoint = (Point *) malloc (sizeof (Point)) ;
 		newPoint -> x = ((float) (e -> pMin -> x + e -> pMax -> x)) / 2 ;
@@ -498,8 +498,8 @@ void P_insertVertex (Polygon * p , Edge * e)
 		newPoint -> z = ((float) (e -> pMin -> z + e -> pMax -> z)) / 2 ;
 		Polygon * newPolygon = (Polygon *) malloc (sizeof (Polygon)) ;
 		newPolygon -> p = newPoint ;
-		newPolygon -> next = p0 -> next ;
-		p0 -> next = newPolygon ;
+		newPolygon -> next = p_t -> next ;
+		p_t -> next = newPolygon ;
 		/******************************************************************************/
 	}
 }
@@ -510,100 +510,243 @@ BoundingBox * P_createBoundingBox (Polygon * p)
 	
 	if (p != NULL) // Si le polygone n'est pas vide.
 	{
-		Polygon * p0 = p ; // Pour parcourir le polygone.
-		int xMin = p -> p -> x , yMin = p -> p -> y , xMax = p -> p -> x ,
-			yMax = p -> p -> y ; // Coordonnes de la bounding box.
-		while (p0 != NULL)
+		Polygon * p_t = p ; // Pour parcourir le polygone.
+		int xMin0 = p -> p -> x , yMin0 = p -> p -> y , xMax0 = p -> p -> x ,
+			yMax0 = p -> p -> y ; // Coordonnes de la bounding box.
+		while (p_t != NULL)
 		{
-			if (p0 -> p -> x < xMin)
+			if (p_t -> p -> x < xMin0)
 			{
-				xMin = p0 -> p -> x ;
+				xMin0 = p_t -> p -> x ;
 			}
-			if (p0 -> p -> y < yMin)
+			if (p_t -> p -> y < yMin0)
 			{
-				yMin = p0 -> p -> y ;
+				yMin0 = p_t -> p -> y ;
 			}
-			if (p0 -> p -> x > xMax)
+			if (p_t -> p -> x > xMax0)
 			{
-				xMax = p0 -> p -> x ;
+				xMax0 = p_t -> p -> x ;
 			}
-			if (p0 -> p -> y > yMax)
+			if (p_t -> p -> y > yMax0)
 			{
-				yMax = p0 -> p -> y ;
+				yMax0 = p_t -> p -> y ;
 			}
 			
-			p0 = p0 -> next ; // Deplacer le pointeur.
+			p_t = p_t -> next ; // Deplacer le pointeur.
 		}
-		result -> upperLeft = P_newPoint (xMin , yMax , 0) ;
-		result -> lowerRight = P_newPoint (xMax , yMin , 0) ;
-		
-		return result ;
+		result -> xMin = xMin0 ;
+		result -> xMax = xMax0 ;
+		result -> yMin = yMin0 ;
+		result -> yMax = yMax0 ;
 	}
-	
-	return NULL ;
-}
-
-void P_fill (Image * image , Polygon * p , int closed)
-{
-	// if (closed == TRUE) // Le polygone doit etre ferme.
-	// {
-		// Edge ** list = P_edgeList (image , p) ;
-		// int nextEdgeIndex = 0 ;
-		// Edge * nextEdge = list [nextEdgeIndex] ;
-		// int nextYMin = nextEdge -> pMin -> y ;
-		// Edge ** list2 = (Edge **) malloc (edgesCount * sizeof (Edge *)) ;
-	// }
-}
-
-Edge ** P_edgeList (Image * image , Polygon * p)
-{
-	if (p != NULL)
+	else
 	{
-		edgesCount = 1 ;
-		Polygon * p0 = p ; // Parcourir le polygone.
-		while (p0 -> next != NULL) // Le polygone contient plus d'un sommet.
+		result -> xMin = 0 ;
+		result -> xMax = 0 ;
+		result -> yMin = 0 ;
+		result -> yMax = 0 ;
+	}
+	return result ;
+}
+
+int P_numberVertices (Polygon * p)
+{
+	int result = 0 ; // Resultat.
+	
+	if (p != NULL) // Si le polygone existe.
+	{
+		Polygon * p_t = p ; // Polygone temporaire.
+		while (p_t != NULL)
 		{
-			edgesCount ++ ; // Une arete de plus.
+			result ++ ; // Un point de plus.
 			
-			p0 = p0 -> next ; // Point suivant.
+			p_t = p_t -> next ; // Point suivant.
 		}
-		if (edgesCount > 2) // Au minimum un triangle.
+	}
+	return result ; // Retourner le nombre de sommets.
+}
+
+void insertEdge (Edge * edges , Edge * newEdge) 
+{
+	Edge * e_t ;
+	Edge * e_t2 = edges ;
+	e_t = e_t2 -> next ; // Prendre l'arete suivante.
+	while (e_t != NULL) // Tant qu'il y a des aretes.
+	{
+		if (newEdge -> xIntersection < e_t -> xIntersection) // Voir pour le sens.
 		{
-			/**************************** Allocation memoire. *****************************/
-			Edge ** result = (Edge **) malloc (edgesCount * sizeof (Edge *)) ;
-			int i = 0 ;
-			while (i < edgesCount)
-			{
-				result [i] = (Edge *) malloc (sizeof (Edge)) ;
-				
-				i ++ ;
-			}
-			/************************* Creer le tableau d'aretes. *************************/
-			Polygon * pToModify = p ;
+			e_t = NULL ; // Vider le pointeur.
+		}
+		else 
+		{
+			e_t2 = e_t ; // Replacer le pointeur.
+			
+			e_t = e_t -> next ; // Deplacer le pointeur
+		}
+	}
+	newEdge -> next = e_t2 -> next ; // Placer l'arete au bon endroit.
+	e_t2 -> next = newEdge ;
+}
+
+void makeEdgeRec (int yComp , Edge * e , Edge * edges [])
+{
+	e -> counter = (((float) (e -> pMax -> x - e -> pMin -> x)) /
+					((float) (e -> pMax -> y - e -> pMin -> y))) ;
+	e -> xIntersection = e -> pMin -> x ;
+	if (e -> pMax -> y < yComp)
+	{
+		e -> yUpper = e -> pMax -> y - 1 ;
+	}
+	else
+	{
+		e -> yUpper = e -> pMax -> y ;
+	}
+	insertEdge (edges [e -> pMin -> y] , e) ; // Ajouter l'arete.
+}
+
+int yNext (int y , int nbVertices , Point * points) 
+{
+	int i ;
+	if ((y + 1) > (nbVertices - 1))
+	{
+		i = 0 ;
+	}
+	else
+	{
+		i = y + 1 ;
+	}
+	while (points[y].y == points[i].y)
+	{
+		if ((i + 1) > (nbVertices - 1))
+		{
 			i = 0 ;
-			while (pToModify != NULL)
+		}
+		else
+		{
+			i ++ ;
+		}
+	}
+	return (points[i].y);
+}
+
+void buildEdgeList (int nbVertices , Point * points , Edge * edges []) 
+{
+	Edge * newEdge ;
+	Point vertice1 , vertice2 ;
+	int yOld = points [nbVertices - 2].y ;
+	vertice1.x = points [nbVertices - 1].x ;
+	vertice1.y = points [nbVertices - 1].y ;
+	int i = 0 ;
+	while (i < nbVertices) 
+	{
+		vertice2 = points [i] ;
+		if (vertice1.y != vertice2.y) // Si l'arete n'est pas horizontale.
+		{
+			newEdge = (Edge *) malloc (sizeof (Edge)) ; // Allouer la memoire.
+			if (vertice1.y < vertice2.y)  // L'arete est croissante.
 			{
-				Polygon * p1 = pToModify ; // Autre temporaire.
-				Point * pointMin = pToModify -> p ;
-				while (p1 != NULL) // Parcourir le polygone.		
+				newEdge -> pMin = & vertice1 ; // Point en bas.
+				newEdge -> pMax = & vertice2 ; // Point en haut.
+				makeEdgeRec (yNext (i , nbVertices , points) , newEdge , edges) ;
+			}
+			else // L'arete est decroissante.
+			{
+				newEdge -> pMin = & vertice2 ; // Point en bas.
+				newEdge -> pMax = & vertice1 ; // Point en haut.
+				makeEdgeRec (yOld , newEdge , edges) ;
+			}
+		}
+		yOld = vertice1.y ; // Mettre a jour.
+		vertice1 = vertice2 ;
+		
+		i ++ ;
+	}
+}
+
+void P_fill (Image * image , int vertices, Point * points , int closed ,
+			 Color color , BoundingBox * bb) 
+{
+	if (closed == TRUE) // Il faut que le polygone soit ferme.
+	{
+		Edge * edges [image -> _height] ; // Aretes.
+		Edge * active ; // Arete active.
+		int i = 0 ;
+		while (i < image -> _height) // Parcourir l'image.
+		{
+			edges [i] = (Edge *) malloc (sizeof (Edge)) ; // Allouer la memoire.
+			edges [i] -> next = NULL ; // Pas d'aretes reliees entre elles.
+			
+			i ++ ;
+		}
+		
+		buildEdgeList (vertices , points , edges) ; // Remplir les aretes.
+		active = (Edge *) malloc (sizeof (Edge)) ; // Allouer la memoire.
+		active -> next = NULL ; // Pas de suivante.
+		i = 0 ;
+		Edge * e_t , * e_t2 ; // Aretes temporaire.
+		while (i < image -> _height) // Parcourir l'image.
+		{			
+			while (edges[i] -> next != NULL) // Examiner l'arete suivante.
+			{
+				e_t = edges [i] -> next -> next ; // Pour deplacer le pointeur.
+				
+				insertEdge (active , edges[i] -> next) ; // Inserer l'arete dans la liste des actives.
+				edges[i] -> next = e_t ; // Deplacer le pointeur.
+			}
+			if (active -> next != NULL)  // Si l'on a trouve d'autres aretes actives.
+			{
+				Color current = image -> _current_color ; // Stocker la couleur courante associee a l'image.
+				image -> _current_color = color ; // Affecter la couleur choisie au polygone.			
+				e_t = active -> next ; // Regarder l'arete suivante, dans les actives.
+				while (e_t != NULL) // Tant qu'il y en a.
 				{
-					if (p1 -> p -> y < pointMin -> y) // Si le sommet est plus bas que yMin.
+					e_t2 = e_t -> next ; // Regarder celle qui suit.
+					float j = e_t -> xIntersection ; // A l'intersection d'une arete.
+					while (j < e_t2 -> xIntersection) // Tant que l'on n'intersecte pas une autre arete.
 					{
-						pointMin = p1 -> p ; // Nouveau point en bas.
+						I_plot (image , j , i) ; // Colorer le pixel.
+						
+						j ++ ;
 					}
 					
-					p1 = p1 -> next ; // Suivant.
+					e_t = e_t2 -> next ; // Deplacer le pointeur.
+				}			
+				image -> _current_color = current ; // Reaffecter la couleur courante de l'image de base.
+				
+				e_t = active ; // Replacer le pointeur.
+				e_t2 = active -> next ; // Replacer le pointeur.
+				while (e_t2 != NULL) // Tant que l'on n'est pas arrive au bout.
+				{
+					if (i >= e_t2 -> yUpper) // Chercher une arete non active.
+					{
+						e_t2 = e_t2 -> next ; // Deplacer le pointeur.
+						
+						Edge * bin = e_t -> next ; // Pointeur poubelle.
+						e_t -> next = bin -> next ; // Deplacer un pointeur.
+						free (bin) ; // Liberer le pointeur poubelle.
+					} 
+					else 
+					{
+						e_t2 -> xIntersection = e_t2 -> xIntersection + e_t2 -> counter ; // Mettre a jour l'intersection.
+						e_t = e_t2 ; // Modifier le pointeur.
+						
+						e_t2 = e_t2 -> next ; // Deplacer le pointeur.
+					}
 				}
-				result [i] -> pMin = pointMin ;
-				result [i] -> pMax = P_nextVertex (p , pointMin , TRUE) ;
-				i ++ ;
-				P_deletePointFromPolygon (image , pToModify , pointMin) ;
+				
+				e_t2 = active -> next ; // Replacer le pointeur.
+				active -> next = NULL ; // Liberer l'arete active suivante.
+				while (e_t2 != NULL)  // Tant qu'il y a des aretes.
+				{
+					e_t = e_t2 -> next ; // Replacer le pointeur.
+					
+					insertEdge (active , e_t2) ; // Inserer l'arete dans la liste des actives.
+					e_t2 = e_t ; // Replacer le pointeur.
+				}
 			}
-			/******************************************************************************/
+			i ++ ;
 		}
 	}
-	
-	return NULL ; // Pas d'aretes.
 }
 
 void P_draw (Image * i , Polygon * pp)

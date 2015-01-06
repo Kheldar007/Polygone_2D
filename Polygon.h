@@ -33,8 +33,10 @@ typedef struct edge
 {
 	Point * pMin ; // Exremite de l'arete donc l'ordonnee est inferieure ou egale a celle de l'autre extremite.
 	Point * pMax ; // Autre extremite.
-	int xIntersection ; // Absisse de l'intersection avec le scan-line courant.
-	int counter ; // Compteur permettant d'incrementer l'absisse du point d'intersection.
+	float yUpper ; // Coordonne y la plus haute.
+	float xIntersection ; // Absisse de l'intersection avec le scan-line courant.
+	float counter ; // Compteur permettant d'incrementer l'absisse du point d'intersection.
+	struct edge * next ; // Arete suivante.
 } Edge ;
 
 typedef struct polygon
@@ -45,9 +47,11 @@ typedef struct polygon
 
 typedef struct
 {
-	Point * upperLeft ; // Point en haut a gauche.
-	Point * lowerRight ; // Point en bas a droite.
-} BoundingBox ;
+	int xMin ;
+	int xMax ;
+	int yMin ;
+	int yMax ;
+} BoundingBox ; // Bounding box.
 
 
 /**
@@ -247,26 +251,66 @@ Edge * P_nextEdge (Polygon * p , Edge * e , int closed) ;
  * @param e L'arete selectionnee.
  */
 void P_insertVertex (Polygon * p , Edge * e) ;
-/**
- * @brief Remplir un polygone.
- * @param image  L'image.
- * @param p      Le polygone.
- * @param closed Si le polygone est ferme ou non.
- */
-void P_fill (Image * image , Polygon * p , int closed) ;
-/**
- * @brief  Liste des aretes d'un polygone.
- * @param  image L'image.
- * @param  p     Le polygone.
- * @return Les aretes de p listees de bas en haut.
- */
-Edge ** P_edgeList (Image * image , Polygon * p) ;
+
+
+/******************************** Remplissage. ********************************/
+
+
 /**
  * @brief  Creer la bounding box.
  * @param  p Le polygone.
  * @return La bounding box de p.
  */
 BoundingBox * P_createBoundingBox (Polygon * p) ;
+/**
+ * @brief  Compter le nombre de sommets d'un polygone.
+ * @param  p Le polygone.
+ * @return Le nombre de sommets de p.
+ */
+int P_numberVertices (Polygon * p) ;
+/**
+ * @brief Inserer une arete en les gardant dans l'ordre croissant.
+ * @param edges    Aretes.
+ * @param newEdges Arete a inserer.
+ */
+void insertEdge (Edge * edges , Edge * newEdge) ;
+/**
+ * @brief Determiner le sens de l'arete.
+ * @param yComp y servant à la comparaison.
+ * @param e     L'arete.
+ * @param edges Aretes.
+ */
+void makeEdgeRec (int yComp , Edge * e , Edge * edges []) ;
+/**
+ * @brief  Retourne l'ordonnee de la prochaine arete.
+ * @param  y          L'ordonnee courante.
+ * @param  nbVertices Le nombre de sommets du polygone.
+ * @param  points     Les sommets de polygone.
+ * @return Ordonnee de la prochaine arete non horizontale.
+ */
+int yNext (int y , int nbVertices , Point * points) ;
+/**
+ * @brief Liste d'aretes.
+ * @param nbVertices Le nombre de sommets du polygone.
+ * @param points     Les sommets du polygone.
+ * @param edges      Les aretes du polygone.
+ */
+void buildEdgeList (int nbVertices , Point * points , Edge * edges []) ;
+/**
+ * @brief Remplir un polygone.
+ * @param image    L'image.
+ * @param vertices Le nombre de sommets du polygone.
+ * @param points   Les sommets du polygone.
+ * @param closed   Si le polynome est ouvert ou ferme.
+ * @param color    La couleur du polygone.
+ * @param bb       La bounding box.
+ */
+void P_fill	(Image * image , int vertices, Point * points , int closed , Color color , BoundingBox * bb) ;
+
+
+/******************************************************************************/
+
+
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.
