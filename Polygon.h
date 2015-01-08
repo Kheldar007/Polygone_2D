@@ -110,12 +110,13 @@ void P_printPolygon (Polygon * p) ;
  */
 void P_addPoint (Polygon * pol , Point * poi) ;
 /**
- * @brief Supprimer un point d'un polygone. Le polygone doit contenir au moins trois points.
- * @param image L'image sur laquelle est dessine le polygone.
- * @param pol   Le polygone.
- * @param poi   Le point a supprimer de pol.
+ * @brief  Supprimer un point d'un polygone. Le polygone doit contenir au moins trois points.
+ * @param  image L'image sur laquelle est dessine le polygone.
+ * @param  pol   Le polygone.
+ * @param  poi   Le point a supprimer de pol.
+ * @return Le polygone resultant.
  */
-void P_deletePointFromPolygon (Image * image , Polygon * pol , Point * poi) ;
+Polygon * P_deletePointFromPolygon (Image * image , Polygon * pol , Point * poi) ;
 /**
  * @brief Afficher la ligne fermant le polygone.
  * @param i L'image sur laquelle tracer le polygone.
@@ -123,7 +124,7 @@ void P_deletePointFromPolygon (Image * image , Polygon * pol , Point * poi) ;
  */
 void P_close (Image * i , Polygon * p) ;
 /**
- * @brief Ouvrir le polygone.
+ * @brief Rafraichir l'image en redessinant le polygone ouvert.
  * @param i L'image sur laquelle tracer le polygone.
  * @param p Le polygone.
  */

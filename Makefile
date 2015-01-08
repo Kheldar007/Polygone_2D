@@ -33,7 +33,7 @@ gdb :
 	
 geany :
 	# geany *.h *.c &
-	geany Polygon.* main.c
+	geany Polygon.* main.c &
 	
 run :
 	./connexes 800 600

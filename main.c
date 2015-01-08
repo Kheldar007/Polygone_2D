@@ -13,8 +13,9 @@
 \*===============================================================*/
 
 #include <stdio.h>
-#include <GL/glut.h>
 #include <GL/gl.h>
+#include <GL/glut.h>
+
 
 # include "Polygon.h"
 
@@ -45,18 +46,17 @@ BoundingBox * boundingBox = NULL ; // Pour le remplissage.
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    	
-	I_draw(img);
+
 	P_draw (img , p) ; // Tracer le polygone.
 	if ((mode == VERTEX) && (selectionVertex == TRUE))
 	{
-		P_vertexSelected (P_closestVertex (p , pointSelected)) ; // Tracer un marqueur autour du point selectionne.
+		P_vertexSelected (pointSelected) ; // Tracer un marqueur autour du point selectionne.
 	}
 	else if ((mode == EDGE) && (selectionEdge == TRUE))
 	{
 		P_edgeSelected (edgeSelected) ; // Colorer l'arete selectionnee.
 	}
-	if (filled == FALSE)
+	else if (filled == TRUE)
 	{
 		if (p != NULL)
 		{
@@ -74,20 +74,10 @@ void display_CB()
 			boundingBox = P_createBoundingBox (p) ; // Mettre a jour la bounding box.
 			Color color = C_new (0 , 0.5 , 1) ; // Choisir la couleur pour remplir le polygone.
 			P_fill (img , i , vertices , closed , color , boundingBox) ; // Remplir le polygone.
+			P_draw (img , p) ; // Tracer le polygone.
 		}
 	}
-	else
-	{
-		if (closed == TRUE)
-		{
-			P_close (img , p) ;
-		}
-		else
-		{
-			P_open (img , p) ;
-		}
-	}
-
+	
     glutSwapBuffers();
 }
 
@@ -100,7 +90,7 @@ void display_CB()
 void mouse_CB(int button, int state, int x, int y)
 {
 	// Point * bin = pointSelected ;
-	pointSelected = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.	
+	Point * point = P_newPoint (x , (img -> _height) - y , 0) ; // Creer un point d'apres le clic de souris, en arrangeant la coordonnee de y.	
 	// P_deletePoint (bin) ;
 	
 	if((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode == APPEND)) // En mode "append".
@@ -109,22 +99,25 @@ void mouse_CB(int button, int state, int x, int y)
 		selectionEdge = FALSE ; // On ne selectionne aucune arete.
 		if (p == NULL) // Si le polygone est vide.
 		{
-			p = P_newPolygon (pointSelected) ; // Creer un nouveau polygone.
+			p = P_newPolygon (point) ; // Creer un nouveau polygone.
 		}
 		else
 		{
-			P_addPoint (p , pointSelected) ; // Ajouter le point au polygone.
+			P_addPoint (p , point) ; // Ajouter le point au polygone.
+			P_open (img , p) ; // Ouvrir le polygone.
+			closed = FALSE ; // Polygone ouvert.
 		}
 		I_focusPoint(img,x,img->_height-y);
 	}
 	else if ((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode == VERTEX)) // En mode "vertex".
 	{
 		selectionVertex = TRUE ; // Un point a ete selectionne.
+		pointSelected = P_closestVertex (p , point) ; // Point du polygone.
 	}
 	else if ((button==GLUT_LEFT_BUTTON) && (state==GLUT_DOWN) && (mode == EDGE)) // En mode "edge".
 	{
-		selectionEdge = TRUE ; // Un point a ete selectionne.
-		edgeSelected = P_closestEdge (p , pointSelected , closed) ; // Trouver l'arete selectionnee.
+		selectionEdge = TRUE ; // Une arete a ete selectionnee.
+		edgeSelected = P_closestEdge (p , point , closed) ; // Trouver l'arete selectionnee.
 	}
 	else if ((button == GLUT_MIDDLE_BUTTON) && (state == GLUT_DOWN) && (closed == FALSE) && (selectionEdge == TRUE)) // Clique avec le bouton du milieu de la souris. Le polygone doit etre ouvert. Une arete doit etre selectionnee.
 	{
@@ -149,13 +142,11 @@ void keyboard_CB(unsigned char key, int x, int y)
 			mode = APPEND ; // Affecter la valeur du mode.
 			if (closed == FALSE)
 			{
-				P_open (img , p) ;
 				selectionVertex = FALSE ;
 				selectionEdge = FALSE ;
 			}
 			else
 			{
-				P_close (img , p) ;
 				selectionVertex = FALSE ;
 				selectionEdge = FALSE ;
 			}
@@ -185,21 +176,27 @@ void keyboard_CB(unsigned char key, int x, int y)
 		{
 			if (closed == TRUE)
 			{
-				if (filled == FALSE)
+				if (filled == TRUE)
 				{
-					filled = TRUE ;
+					filled = FALSE ;
+					P_close (img , p) ;
 				}
 				else
 				{
-					filled = FALSE ;
+					filled = TRUE ;
+					P_close (img , p) ;
 				}
 			}
+			selectionVertex = FALSE ;
+			selectionEdge = FALSE ;
+			break ;
 		}
 		case 'i' : I_zoomInit(img); break;
 		case 'v' : // Mode "vertex". Un seul sommet est selectionne.
 		{
 			mode = VERTEX ; // Affecter la valeur du mode.
 			selectionEdge = FALSE ;
+			if (closed == TRUE) {P_close (img , p) ;}
 			break ;
 		}
 		case 'z' : I_zoom(img,2.0); break;
@@ -208,7 +205,17 @@ void keyboard_CB(unsigned char key, int x, int y)
 		{
 			if ((mode == VERTEX) && (selectionVertex == TRUE))
 			{
-				P_deletePointFromPolygon (img , p , P_closestVertex (p , pointSelected)) ;
+				p = P_deletePointFromPolygon (img , p , pointSelected) ; 
+		
+				if( p != NULL )
+				{
+					pointSelected = p -> p ;
+				}
+				else
+				{
+					mode = APPEND ;
+					pointSelected = NULL ;
+				}
 			}
 			break ;
 		}
@@ -239,6 +246,7 @@ void special_CB(int key, int x, int y)
 			}
 			else if ((mode == VERTEX) && (selectionVertex == TRUE)) // En mode "vertex".
 			{
+				closed = FALSE ;
 				P_moveUp (img , p , P_closestVertex (p , pointSelected)) ;
 			}
 			break;
@@ -251,6 +259,7 @@ void special_CB(int key, int x, int y)
 			}
 			else if ((mode == VERTEX) && (selectionVertex == TRUE)) // En mode "vertex".
 			{
+				closed = FALSE ;
 				P_moveDown (img , p , P_closestVertex (p , pointSelected)) ;
 			}
 			break;
@@ -263,6 +272,7 @@ void special_CB(int key, int x, int y)
 			}
 			else if ((mode == VERTEX) && (selectionVertex == TRUE)) // En mode "vertex".
 			{
+				closed = FALSE ;
 				P_moveLeft (img , p , P_closestVertex (p , pointSelected)) ;
 			}
 			break;
@@ -275,6 +285,7 @@ void special_CB(int key, int x, int y)
 			}
 			else if ((mode == VERTEX) && (selectionVertex == TRUE)) // En mode "vertex".
 			{
+				closed = FALSE ;
 				P_moveRight (img , p , P_closestVertex (p , pointSelected)) ;
 			}
 			break;
