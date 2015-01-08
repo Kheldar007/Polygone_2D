@@ -306,12 +306,13 @@ void buildEdgeList (int nbVertices , Point * points , Edge * edges []) ;
  * @param color    La couleur du polygone.
  * @param bb       La bounding box.
  */
-void P_fill	(Image * image , int vertices, Point * points , int closed , Color color , BoundingBox * bb) ;
+void P_fill (Image * image , int vertices, Point * points , int closed , Color color , BoundingBox * bb) ;
 
 
 /******************************************************************************/
 
 
+Polygon * P_reset (Image * image , Polygon * pol) ;
 /**
  * @brief Tracer un polygone.
  * @param i L'image sur laquelle tracer le polygone.

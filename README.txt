@@ -30,3 +30,11 @@ En cliquant sur "page precedente" ou "page suivante", on selectionne l'arete
 precedente ou suivante.
 En cliquant avec le bouton central de la souris sur une arete selectionnee, on
 rejoute un sommet au milieu de cette arete.
+
+Captures d'ecran
+01 : Tracer un polygone et appuyer sur 'f'.
+02 : On a reappuye sur 'f'.
+03 : On a appuye sur 'c' pour ouvrir, on a selectionne un point en mode vertex
+en appuyant sur 'v', puis on le deplace en appuyant sur les fleches.
+04 : On a appuye sur 'c' pour refermer le polygone.
+05 : On a appuye sur 'e' pour selectionner une arete.

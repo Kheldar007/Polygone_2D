@@ -742,8 +742,19 @@ void P_fill (Image * image , int vertices, Point * points , int closed ,
 	}
 }
 
-void P_draw (Image * i , Polygon * pp)
+Polygon * P_reset (Image * image , Polygon * pol)
 {
+	while (pol != NULL)
+	{
+		pol = P_deletePointFromPolygon (image , pol , pol -> p) ; // Supprimer la tete.
+		
+	}
+	I_fill (image , C_new (0 , 0 , 0)) ; // Peindre l'image en noir.
+	return pol ;
+}
+
+void P_draw (Image * i , Polygon * pp)
+{	
 	I_draw (i) ; // Dessiner l'image.	
 	if (pp != NULL) // Si le polygone contient quelque chose.
 	{

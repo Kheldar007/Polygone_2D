@@ -192,6 +192,19 @@ void keyboard_CB(unsigned char key, int x, int y)
 			break ;
 		}
 		case 'i' : I_zoomInit(img); break;
+		case 'r' : // Faire un reset.
+		{
+			p = P_reset (img , p) ;
+			P_open (img , p) ;
+			mode = APPEND ;
+			selectionVertex = FALSE ;
+			selectionEdge = FALSE ;
+			filled = FALSE ;
+			pointSelected = NULL ;
+			edgeSelected = NULL ;
+			closed = FALSE ; // Le polygone est ouvert.
+			break ;
+		}
 		case 'v' : // Mode "vertex". Un seul sommet est selectionne.
 		{
 			mode = VERTEX ; // Affecter la valeur du mode.
@@ -207,9 +220,9 @@ void keyboard_CB(unsigned char key, int x, int y)
 			{
 				p = P_deletePointFromPolygon (img , p , pointSelected) ; 
 		
-				if( p != NULL )
+				if (p != NULL)
 				{
-					pointSelected = p -> p ;
+					pointSelected = P_closestVertex (p , pointSelected) ;
 				}
 				else
 				{
